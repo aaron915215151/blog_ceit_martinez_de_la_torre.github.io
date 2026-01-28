@@ -1,0 +1,230 @@
+{
+  "config": {
+    "blog_title": "Bloc de la Especialida de Informática",
+    "blog_subtitle": "Tu portal de aprendizaje tecnico",
+    "footer_text": "© Cento de Estudio E Investigacion Tecnológica. Todos los derechos reservados.",
+    "primary_color": "#3b82f6",
+    "secondary_color": "#ffffff",
+    "text_color": "#1f2937",
+    "accent_color": "#10b981",
+    "background_color": "#f3f4f6",
+    "font_family": "system-ui",
+    "font_size": 16
+  },
+  "categories": [
+    {
+      "id": "intro",
+      "name": "Introducción a la Informática",
+      "icon": "💻",
+      "description": "Conceptos fundamentales y bases de la informática"
+    },
+    {
+      "id": "office",
+      "name": "Microsoft Office",
+      "icon": "📊",
+      "description": "Domina Word, Excel, PowerPoint y más"
+    },
+    {
+      "id": "programming",
+      "name": "Programación",
+      "icon": "👨‍💻",
+      "description": "Aprende lenguajes de programación desde cero"
+    },
+    {
+      "id": "web",
+      "name": "Desarrollo Web",
+      "icon": "🌐",
+      "description": "Crea sitios web con HTML, CSS y JavaScript"
+    },
+    {
+      "id": "canva",
+      "name": "Canva",
+      "icon": "✨",
+      "description": "Diseño simple y accesible para todos"
+    },
+    {
+      "id": "adobe",
+      "name": "Adobe Creative Suite",
+      "icon": "🖌️",
+      "description": "Photoshop, Illustrator, Audition y más herramientas profesionales"
+    }
+  ],
+  "posts": [
+    {
+      "id": "1",
+      "category": "intro",
+      "title": "¿Qué es la Informática?",
+      "excerpt": "Descubre los fundamentos de la informática y cómo ha revolucionado nuestro mundo digital.",
+      "icon": "💻",
+      "date": "26 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "La informática es la ciencia que estudia el procesamiento automático de información mediante computadoras. Abarca desde el diseño de hardware y software hasta aplicaciones prácticas en diversos campos. En este curso aprenderás: los antecedentes históricos de la computación, componentes básicos de una computadora, sistemas operativos, aplicaciones de software, y cómo la tecnología ha transformado la sociedad moderna. La informática es fundamental en educación, medicina, finanzas, comunicaciones y entretenimiento."
+    },
+    {
+      "id": "2",
+      "category": "intro",
+      "title": "Hardware vs Software",
+      "excerpt": "Aprende la diferencia entre los componentes físicos y lógicos de una computadora.",
+      "icon": "🔧",
+      "date": "25 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "Hardware se refiere a los componentes físicos de una computadora: procesador (CPU), memoria RAM, disco duro, tarjeta gráfica, motherboard, etc. Software incluye los programas y sistemas operativos que hacen funcionar el hardware. Aprenderás sobre: tipos de procesadores y su rendimiento, memoria y almacenamiento, periféricos de entrada/salida, sistemas operativos (Windows, macOS, Linux), aplicaciones de software, y cómo interactúan hardware y software para ejecutar tareas."
+    },
+    {
+      "id": "3",
+      "category": "office",
+      "title": "Domina Microsoft Word",
+      "excerpt": "Técnicas profesionales para crear documentos impactantes con formato avanzado.",
+      "icon": "📝",
+      "date": "24 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "Microsoft Word es el procesador de textos más utilizado en el mundo empresarial. En este curso aprenderás: formateo de texto (fuentes, tamaños, colores), estilos y temas profesionales, inserción de tablas e imágenes, encabezados y pies de página, numeración y viñetas, creación de índices automáticos, trabajar con plantillas, funciones de revisión y comentarios, exportación a PDF, y buenas prácticas para documentos profesionales. Desarrollarás habilidades para crear informes, currículos y correspondencia comercial de calidad."
+    },
+    {
+      "id": "4",
+      "category": "office",
+      "title": "Excel: Fórmulas Esenciales",
+      "excerpt": "Las fórmulas más importantes que todo profesional debe conocer para análisis de datos.",
+      "icon": "📊",
+      "date": "23 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "Excel es la herramienta estándar para análisis de datos y contabilidad. Aprenderás: funciones básicas (SUMA, PROMEDIO, CONTAR), funciones lógicas (SI, Y, O), búsqueda y referencia (VLOOKUP, INDEX, MATCH), funciones de fecha/hora, creación de tablas dinámicas, gráficos profesionales, validación de datos, protección de hojas, y análisis estadístico. Estas habilidades son esenciales para profesionales de finanzas, contabilidad, recursos humanos y gestión empresarial."
+    },
+    {
+      "id": "5",
+      "category": "office",
+      "title": "PowerPoint Profesional",
+      "excerpt": "Crea presentaciones que cautiven a tu audiencia con diseño y contenido efectivo.",
+      "icon": "📽️",
+      "date": "22 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "PowerPoint es la herramienta de presentación más popular para negocios y educación. Dominarás: diseño de diapositivas efectivas, uso de plantillas y temas, inserción de multimedia (videos, audios, imágenes), animaciones y transiciones profesionales, creación de gráficos y tablas, notas del presentador, control de presentación, exportación en diferentes formatos. Aprenderás principios de diseño visual, comunicación efectiva, y cómo mantener audiencias enganchadas en tus presentaciones."
+    },
+    {
+      "id": "8",
+      "category": "programming",
+      "title": "Visual Basic para Principiantes",
+      "excerpt": "Aprende Visual Basic, el lenguaje ideal para desarrollar aplicaciones de escritorio en Windows.",
+      "icon": "📋",
+      "date": "21 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "Visual Basic es un lenguaje de programación intuitivo y poderoso para crear aplicaciones Windows. En este curso aprenderás: variables y tipos de datos, operadores lógicos y aritméticos, estructuras de control (if, for, while), funciones y procedimientos, manejo de formularios y controles, eventos de usuario, gestión de archivos, acceso a bases de datos, y creación de interfaces gráficas. Visual Basic es perfecto para principiantes que desean aprender programación estructurada y orientada a objetos."
+    },
+    {
+      "id": "14",
+      "category": "programming",
+      "title": "Java: Programación Orientada a Objetos",
+      "excerpt": "Domina Java y los principios de POO para crear aplicaciones robustas y escalables.",
+      "icon": "☕",
+      "date": "20 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "Java es uno de los lenguajes de programación más utilizados en el mundo empresarial. Aprenderás: sintaxis básica, variables y tipos de datos, clases y objetos, encapsulación, herencia y polimorfismo, interfaces y clases abstractas, manejo de excepciones, colecciones y listas, entrada/salida de datos, programación multihilo, y acceso a bases de datos. Java es usado en desarrollo empresarial, aplicaciones móviles (Android), sistemas distribuidos, y es altamente demandado en el mercado laboral."
+    },
+    {
+      "id": "7",
+      "category": "web",
+      "title": "HTML",
+      "excerpt": "Aprende los fundamentos de HTML para estructurar tus páginas web.",
+      "icon": "📄",
+      "date": "19 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "HTML (HyperText Markup Language) es el lenguaje fundamental para crear páginas web. En este curso aprenderás: estructura básica de un documento HTML, etiquetas de encabezado y párrafos, listas ordenadas y desordenadas, enlaces e hipervínculos, inserción de imágenes, creación de tablas, formularios y validación de entrada, atributos HTML, metaetiquetas para SEO, y buenas prácticas de accesibilidad. HTML es la base sobre la que se construyen todas las páginas web."
+    },
+    {
+      "id": "15",
+      "category": "web",
+      "title": "HTML5",
+      "excerpt": "Domina las nuevas características y etiquetas semánticas de HTML5.",
+      "icon": "🔤",
+      "date": "18 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "HTML5 es la versión más moderna de HTML con características revolucionarias. Aprenderás: etiquetas semánticas (article, section, nav, header, footer), video y audio nativos, canvas para gráficos, storage local, geolocalización, drag & drop, API de web workers, mejoras en formularios, soporte multimedia, y compatibilidad con dispositivos móviles. HTML5 permite crear aplicaciones web modernas, interactivas y responsivas."
+    },
+    {
+      "id": "16",
+      "category": "web",
+      "title": "CSS: Estilos y Diseño",
+      "excerpt": "Aprende a diseñar y estilizar tus páginas web con CSS moderno.",
+      "icon": "🎨",
+      "date": "17 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "CSS (Cascading Style Sheets) transforma el aspecto visual de tus páginas web. Dominarás: selectores CSS, propiedades de texto y fuentes, colores y fondos, layout con flexbox y grid, responsive design para móviles, animaciones y transiciones, media queries, variables CSS, preprocesadores (SASS/LESS), frameworks como Bootstrap. Aprenderás a crear interfaces visualmente atractivas y adaptables a cualquier dispositivo."
+    },
+    {
+      "id": "17",
+      "category": "web",
+      "title": "JavaScript Interactivo",
+      "excerpt": "Haz tus sitios web dinámicos e interactivos con JavaScript.",
+      "icon": "⚡",
+      "date": "16 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "JavaScript es el lenguaje de programación para navegadores que hace las web interactivas. Aprenderás: variables y tipos de datos, operadores, funciones, objetos y arrays, manipulación del DOM, eventos del usuario, AJAX y fetch API, JSON, asincronía con promises y async/await, librerías populares (jQuery, React, Vue), debugging. JavaScript es esencial para desarrollo web moderno y cada vez se usa más en backend con Node.js."
+    },
+    {
+      "id": "9",
+      "category": "canva",
+      "title": "Introducción a Canva",
+      "excerpt": "Crea diseños profesionales sin necesidad de experiencia previa. Plantillas listas para usar.",
+      "icon": "✨",
+      "date": "15 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "Canva es una plataforma de diseño gráfico intuitiva y accesible para principiantes. Aprenderás: interfaz de Canva y navegación, plantillas prediseñadas para diversos formatos, edición de texto y tipografía, inserción de imágenes y elementos gráficos, uso de colores y paletas, capas y organización, descargas en diferentes formatos (PNG, PDF, MP4), funciones colaborativas. Canva democratiza el diseño, permitiendo a cualquier persona crear gráficos profesionales sin conocimientos técnicos."
+    },
+    {
+      "id": "10",
+      "category": "canva",
+      "title": "Diseña Redes Sociales con Canva",
+      "excerpt": "Aprende a crear posts, stories e historias atractivas para tus redes sociales.",
+      "icon": "📱",
+      "date": "14 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "Domina la creación de contenido visual para redes sociales usando Canva. Aprenderás: tamaños y dimensiones para cada plataforma (Instagram, Facebook, TikTok, LinkedIn, Twitter), creación de posts estáticos atractivos, diseño de stories con movimiento, carruseles y videos cortos, uso de branding consistente (colores, logos, fuentes), mejores prácticas de engagement, optimización de imágenes, scheduling y publicación. Crea contenido profesional que aumente tu alcance y engagement en redes sociales."
+    },
+    {
+      "id": "11",
+      "category": "adobe",
+      "title": "Photoshop Profesional",
+      "excerpt": "Edita y retoca imágenes como un profesional con las herramientas más poderosas.",
+      "icon": "🖼️",
+      "date": "13 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "Photoshop es el estándar de la industria para edición de imágenes. Dominarás: navegación y herramientas básicas, selecciones avanzadas (lazo, varita mágica), capas y máscaras, ajustes de color y exposición, herramientas de retoque (clone, healing), filtros y efectos, texto y tipografía, composición y montaje, preparación de imágenes para web, automatización con acciones. Photoshop es esencial para fotógrafos, diseñadores gráficos, y creadores de contenido."
+    },
+    {
+      "id": "12",
+      "category": "adobe",
+      "title": "Illustrator: Diseño Vectorial",
+      "excerpt": "Crea logotipos, ilustraciones y gráficos vectoriales escalables con Illustrator.",
+      "icon": "🎭",
+      "date": "12 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "Adobe Illustrator es la herramienta profesional para crear gráficos vectoriales. Aprenderás: herramientas de dibujo (pluma, formas), manipulación de vectores, color y rellenos, efectos y filtros vectoriales, tipografía avanzada, creación de logotipos y marcas, preparación de archivos para impresión, exportación a diferentes formatos. Los gráficos vectoriales son ideales para logotipos, iconos, ilustraciones y cualquier diseño que requiera escalabilidad sin pérdida de calidad."
+    },
+    {
+      "id": "13",
+      "category": "adobe",
+      "title": "Audition: Edición de Audio",
+      "excerpt": "Aprende a editar, mezclar y masterizar audio profesionalmente con Adobe Audition.",
+      "icon": "🎙️",
+      "date": "11 Enero 2026",
+      "rating": 0,
+      "likes": 0,
+      "content": "Adobe Audition es la plataforma profesional para edición y producción de audio. Dominarás: grabación de audio de alta calidad, edición de pistas múltiples, efectos de audio (reverberación, compresión, EQ), reducción de ruido, normalización, masterización, creación de música y bandas sonoras, sincronización con video. Audition es usado por podcasters, productores musicales, cineastas y profesionales de audio que requieren calidad de estudio."
+    }
+  ]
+}

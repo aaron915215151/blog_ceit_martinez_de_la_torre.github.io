@@ -1,0 +1,28 @@
+{
+  "files": [
+    {
+      "id": 1,
+      "type": "image",
+      "name": "ejemplo_imagen.jpg",
+      "path": "uploads/images/ejemplo_imagen.jpg",
+      "uploadDate": "26 Enero 2026",
+      "description": "Ejemplo de imagen educativa"
+    },
+    {
+      "id": 2,
+      "type": "video",
+      "name": "tutorial_html.mp4",
+      "path": "uploads/videos/tutorial_html.mp4",
+      "uploadDate": "25 Enero 2026",
+      "description": "Tutorial introductorio de HTML"
+    },
+    {
+      "id": 3,
+      "type": "document",
+      "name": "guia_css.pdf",
+      "path": "uploads/documents/guia_css.pdf",
+      "uploadDate": "24 Enero 2026",
+      "description": "Guía completa de CSS"
+    }
+  ]
+}

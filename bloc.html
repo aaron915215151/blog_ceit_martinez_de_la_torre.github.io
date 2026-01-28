@@ -1,0 +1,2582 @@
+<!doctype html>
+<html lang="es">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog - Escuela de Informática</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'system-ui', -apple-system, sans-serif;
+    }
+    html {
+      height: 100%;
+    }
+
+    :root {
+      --max-width: 1200px;
+      --primary-color: #3b82f6;
+      --secondary-color: #ffffff;
+      --text-color: #1f2937;
+      --accent-color: #10b981;
+      --background-color: #f3f4f6;
+      --container-padding: 24px;
+    }
+
+    .page {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      padding: 40px var(--container-padding);
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+    }
+
+    .grid-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+    }
+
+    .card {
+      padding: 24px;
+      border-radius: 12px;
+      background: var(--secondary-color);
+    }
+
+    .category-icon {
+      font-size: 56px;
+      margin-bottom: 20px;
+      animation: bounce 2s infinite;
+    }
+
+    .card-title {
+      margin: 0 0 12px 0;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .card-desc {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .btn-block {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .logo-img {
+      max-width: 100px;
+      height: auto;
+      display: block;
+    }
+
+    .muted.small {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .post-icon {
+      font-size: 44px;
+      margin-bottom: 16px;
+    }
+
+    .post-title {
+      color: inherit;
+      margin: 0 0 12px 0;
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .post-excerpt {
+      margin: 12px 0;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid;
+    }
+
+    .post-date {
+      color: inherit;
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    .grid-posts {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+    }
+
+    .empty-state p {
+      font-size: 18px;
+      opacity: 0.7;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 45px;
+      background: rgba(255,255,255,0.25);
+      animation: rotate 4s linear infinite;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      border: 3px solid rgba(255,255,255,0.4);
+    }
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .header-title {
+      text-align: center;
+    }
+    .header-title h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 800;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      letter-spacing: 1px;
+    }
+    .header-title p {
+      margin: 8px 0 0 0;
+      font-size: clamp(14px, 3vw, 20px);
+      opacity: 0.95;
+      font-weight: 300;
+    }
+    .category-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+      z-index: 1;
+    }
+    .category-card:hover::before {
+      left: 100%;
+    }
+    .category-card:hover {
+      transform: translateY(-12px) scale(1.03);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+    .category-card:active {
+      transform: translateY(-8px) scale(1.02);
+    }
+    .post-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .post-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #10b981, #3b82f6);
+      transition: width 0.3s ease;
+    }
+    .post-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    .post-card:hover::after {
+      width: 100%;
+    }
+    .comment-item {
+      animation: slideIn 0.4s ease;
+      transition: all 0.3s ease;
+    }
+    .comment-item:hover {
+      transform: translateX(8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      z-index: 1000;
+      animation: slideInRight 0.3s ease;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    @keyframes slideInRight {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    .btn-interactive {
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 14px;
+      padding: 12px 28px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .btn-interactive::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    .btn-interactive:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    .btn-interactive:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      letter-spacing: 1px;
+    }
+    .btn-interactive:active {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .search-bar {
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 16px;
+      width: 100%;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .search-bar:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+      transform: translateY(-2px);
+    }
+    .rating {
+      display: flex;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .star {
+      font-size: 28px;
+      transition: all 0.2s ease;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+    .star:hover {
+      transform: scale(1.4) rotate(15deg);
+      filter: drop-shadow(0 4px 8px rgba(251, 191, 36, 0.6));
+    }
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-section {
+      animation: fadeInUp 0.6s ease;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    .footer-section h3 {
+      margin: 0 0 16px 0;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid rgba(255,255,255,0.3);
+      padding-bottom: 12px;
+    }
+    .footer-section ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .footer-section li {
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+    }
+    .footer-section a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+    .footer-section a:hover {
+      color: #ffffff;
+      transform: translateX(8px);
+      font-weight: 600;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 32px;
+      text-align: center;
+    }
+    .footer-bottom p {
+      margin: 8px 0;
+      font-size: 14px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .social-links a {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255,255,255,0.2);
+      text-decoration: none;
+      color: #ffffff;
+      font-size: 20px;
+    }
+    .social-links a:hover {
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-4px) scale(1.1);
+    }
+    .nav-menu {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    @media (max-width: 768px) {
+      .logo-container {
+        flex-direction: column;
+      }
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      .btn-interactive {
+        padding: 10px 20px;
+        font-size: 13px;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body>
+  <div id="app" class="min-h-full flex flex-col"></div>
+  <script>
+    // Variables globales
+    let defaultConfig = {};
+    let blogPosts = [];
+    let categories = [];
+    let currentCategory = null;
+    let currentPost = null;
+    let allComments = [];
+    let searchTerm = "";
+    let userRole = null; // 'admin', 'student', null
+    let currentStudent = null;
+    const ADMIN_PASSWORD = '12345'; // Cambiar en producción
+
+    async function loadData() {
+      try {
+        const response = await fetch('data.json');
+        const data = await response.json();
+        defaultConfig = data.config;
+        blogPosts = data.posts;
+        categories = data.categories;
+        
+        // Cargar configuración guardada en localStorage si existe
+        const savedConfig = localStorage.getItem('config');
+        if (savedConfig) {
+          const localConfig = JSON.parse(savedConfig);
+          defaultConfig = { ...defaultConfig, ...localConfig };
+        }
+        
+        // Cargar posts guardados en localStorage si existen
+        const savedPosts = localStorage.getItem('blogPosts');
+        if (savedPosts) {
+          blogPosts = JSON.parse(savedPosts);
+        }
+        
+        // Cargar comentarios guardados en localStorage si existen
+        const savedComments = localStorage.getItem('allComments');
+        if (savedComments) {
+          allComments = JSON.parse(savedComments);
+        }
+        
+        // Verificar si hay sesión activa
+        const savedRole = localStorage.getItem('userRole');
+        const savedStudent = localStorage.getItem('currentStudent');
+        
+        if (savedRole === 'admin') {
+          userRole = 'admin';
+          showAdminPanel();
+        } else if (savedRole === 'student' && savedStudent) {
+          userRole = 'student';
+          currentStudent = JSON.parse(savedStudent);
+          showHome();
+        } else {
+          showLogin();
+        }
+      } catch (error) {
+        console.error('Error cargando datos:', error);
+        defaultConfig = {
+          blog_title: "Escuela de Informática Digital",
+          blog_subtitle: "Por la Superación Humana y Cultural",
+          footer_text: "© 2024 Escuela de Informática Digital. Todos los derechos reservados.",
+          primary_color: "#3b82f6",
+          secondary_color: "#ffffff",
+          text_color: "#1f2937",
+          accent_color: "#10b981",
+          background_color: "#f3f4f6",
+          font_family: "system-ui",
+          font_size: 16,
+          loginBackgroundImage: null,
+          adminHeaderBackgroundImage: null,
+          // Configuración editable del Header del alumno
+          student_header_title: "Escuela de Informática Digital",
+          student_header_subtitle: "Por la Superación Humana y Cultural",
+          student_header_backgroundImage: null,
+          student_header_logoImage: null,
+          student_header_logoMaxHeight: 150,
+          student_header_cta_text: "Comenzar",
+          login_title: "📚 Bloc de Informática",
+          login_subtitle: "Portal Educativo Digital",
+          login_btn_admin: "🔐 Administrador",
+          login_btn_register: "👨‍🎓 Alumno - Nuevo Registro",
+          login_btn_login: "👨‍🎓 Alumno - Tengo Cuenta",
+          login_footer_line1: "© 2026 Centro de Estudios e Investigación Tecnológica",
+          login_footer_line2: "Por la Superación Humana y Cultural"
+        };
+        showLogin();
+      }
+    }
+
+    function showLogin() {
+      const backgroundStyle = defaultConfig.loginBackgroundImage ? 
+        `background-image: url('${defaultConfig.loginBackgroundImage}'); background-size: cover; background-position: center;` :
+        `background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);`;
+      
+      const html = `
+        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; ${backgroundStyle} position: relative;">
+          <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4);"></div>
+          <div style="position: relative; z-index: 10; background: white; padding: 50px; border-radius: 20px; box-shadow: 0 25px 80px rgba(0,0,0,0.25); max-width: 420px; width: 90%; animation: slideInUp 0.5s ease;">
+            <div style="text-align: center; margin-bottom: 40px;">
+              <h1 style="margin: 0 0 12px 0; font-size: 36px; font-weight: 900; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${defaultConfig.login_title}</h1>
+              <p style="margin: 0; color: #6b7280; font-size: 15px; font-weight: 500;">${defaultConfig.login_subtitle}</p>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+              <button onclick="showAdminLogin()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 700; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(59, 130, 246, 0.3)'">${defaultConfig.login_btn_admin}</button>
+              <button onclick="showStudentRegister()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 700; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(16, 185, 129, 0.3)'">${defaultConfig.login_btn_register}</button>
+              <button onclick="showStudentLogin()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 700; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(6, 182, 212, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(6, 182, 212, 0.3)'">${defaultConfig.login_btn_login}</button>
+            </div>
+
+            <div style="text-align: center; font-size: 12px; color: #9ca3af; margin-top: 20px;">
+              <p style="margin: 0;">${defaultConfig.login_footer_line1}</p>
+              <p style="margin: 4px 0 0 0;">${defaultConfig.login_footer_line2}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('app').innerHTML = html;
+    }
+
+    function showAdminLogin() {
+      const backgroundStyle = defaultConfig.loginBackgroundImage ? 
+        `background-image: url('${defaultConfig.loginBackgroundImage}'); background-size: cover; background-position: center;` :
+        `background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);`;
+      
+      const html = `
+        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; ${backgroundStyle} position: relative;">
+          <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4);"></div>
+          <div style="position: relative; z-index: 10; background: white; padding: 50px 40px; border-radius: 20px; box-shadow: 0 25px 80px rgba(0,0,0,0.25); max-width: 420px; width: 90%; animation: slideInUp 0.5s ease;">
+            <div style="text-align: center; margin-bottom: 40px;">
+              <div style="font-size: 48px; margin-bottom: 16px;">🔐</div>
+              <h2 style="text-align: center; margin: 0 0 8px 0; font-size: 28px; font-weight: 800; color: #1f2937;">Acceso Administrativo</h2>
+              <p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: 300;">Ingresa tu contraseña para continuar</p>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; color: #1f2937; font-weight: 600; font-size: 13px;">🔑 Contraseña</label>
+              <input type="password" id="admin-password" placeholder="Ingresa tu contraseña" style="width: 100%; padding: 14px 16px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#3b82f6';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" onblur="this.style.borderColor='#e5e7eb';this.style.boxShadow='none'">
+            </div>
+            
+            <button onclick="loginAdmin()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 700; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); margin-bottom: 12px;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(59, 130, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(59, 130, 246, 0.3)'">Entrar</button>
+            <button onclick="showLogin()" style="width: 100%; padding: 14px; background: #f3f4f6; color: #1f2937; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 700; transition: all 0.3s ease;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">← Atrás</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('app').innerHTML = html;
+      document.getElementById('admin-password').focus();
+    }
+
+    function loginAdmin() {
+      const password = document.getElementById('admin-password').value;
+      if (password === ADMIN_PASSWORD) {
+        userRole = 'admin';
+        localStorage.setItem('userRole', 'admin');
+        showAdminPanel();
+      } else {
+        showToast('❌ Contraseña incorrecta', 'error', '🔐');
+      }
+    }
+
+    function showStudentRegister() {
+      const backgroundStyle = defaultConfig.loginBackgroundImage ? 
+        `background-image: url('${defaultConfig.loginBackgroundImage}'); background-size: cover; background-position: center;` :
+        `background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);`;
+      
+      const html = `
+        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; ${backgroundStyle} padding: 20px; position: relative;">
+          <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4);"></div>
+          <div style="position: relative; z-index: 10; background: white; padding: 50px 40px; border-radius: 20px; box-shadow: 0 25px 80px rgba(0,0,0,0.25); max-width: 450px; width: 100%; animation: slideInUp 0.5s ease;">
+            <div style="text-align: center; margin-bottom: 40px;">
+              <div style="font-size: 56px; margin-bottom: 16px;">👨‍🎓</div>
+              <h2 style="text-align: center; margin: 0 0 8px 0; font-size: 28px; font-weight: 800; color: #1f2937;">Únete a Nuestro Bloc</h2>
+              <p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: 300;">Crea tu cuenta para comenzar a aprender</p>
+            </div>
+            
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; margin-bottom: 8px; color: #1f2937; font-weight: 600; font-size: 13px;">👤 Nombre completo</label>
+              <input type="text" id="student-name" placeholder="Juan Pérez García" style="width: 100%; padding: 14px 16px; margin-bottom: 0; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#3b82f6';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" onblur="this.style.borderColor='#e5e7eb';this.style.boxShadow='none'">
+            </div>
+            
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; margin-bottom: 8px; color: #1f2937; font-weight: 600; font-size: 13px;">@️ Usuario</label>
+              <input type="text" id="student-username" placeholder="juanperez" style="width: 100%; padding: 14px 16px; margin-bottom: 0; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#3b82f6';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" onblur="this.style.borderColor='#e5e7eb';this.style.boxShadow='none'">
+            </div>
+            
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; margin-bottom: 8px; color: #1f2937; font-weight: 600; font-size: 13px;">✉️ Email</label>
+              <input type="email" id="student-email" placeholder="tu@email.com" style="width: 100%; padding: 14px 16px; margin-bottom: 0; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#3b82f6';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" onblur="this.style.borderColor='#e5e7eb';this.style.boxShadow='none'">
+            </div>
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; margin-bottom: 8px; color: #1f2937; font-weight: 600; font-size: 13px;">🎓 Curso/Grado</label>
+              <input type="text" id="student-course" placeholder="4to Año Informática" style="width: 100%; padding: 14px 16px; margin-bottom: 0; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#3b82f6';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" onblur="this.style.borderColor='#e5e7eb';this.style.boxShadow='none'">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; color: #1f2937; font-weight: 600; font-size: 13px;">🔐 Contraseña</label>
+              <input type="password" id="student-password" placeholder="••••••••" style="width: 100%; padding: 14px 16px; margin-bottom: 0; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#3b82f6';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" onblur="this.style.borderColor='#e5e7eb';this.style.boxShadow='none'">
+            </div>
+            
+            <button onclick="registerStudent()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 700; margin-bottom: 12px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(16,185,129,0.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(16,185,129,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 15px rgba(16,185,129,0.3)'">✅ Registrarse</button>
+            
+            <button onclick="showStudentLogin()" style="width: 100%; padding: 12px; background: #f3f4f6; color: #1f2937; border: 2px solid #e5e7eb; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 12px; transition: all 0.3s ease;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">¿Ya tienes cuenta? Inicia sesión</button>
+            
+            <button onclick="showLogin()" style="width: 100%; padding: 12px; background: transparent; color: #6b7280; border: none; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.color='#3b82f6'" onmouseout="this.style.color='#6b7280'">← Volver</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('app').innerHTML = html;
+      document.getElementById('student-name').focus();
+    }
+
+    function showStudentLogin() {
+      const backgroundStyle = defaultConfig.loginBackgroundImage ? 
+        `background-image: url('${defaultConfig.loginBackgroundImage}'); background-size: cover; background-position: center;` :
+        `background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);`;
+      
+      const html = `
+        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; ${backgroundStyle} padding: 20px; position: relative;">
+          <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4);"></div>
+          <div style="position: relative; z-index: 10; background: white; padding: 50px 40px; border-radius: 20px; box-shadow: 0 25px 80px rgba(0,0,0,0.25); max-width: 450px; width: 100%; animation: slideInUp 0.5s ease;">
+            <div style="text-align: center; margin-bottom: 40px;">
+              <div style="font-size: 56px; margin-bottom: 16px;">🔓</div>
+              <h2 style="text-align: center; margin: 0 0 8px 0; font-size: 28px; font-weight: 800; color: #1f2937;">Bienvenido de Vuelta</h2>
+              <p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: 300;">Inicia sesión en tu cuenta para acceder al contenido</p>
+            </div>
+            
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; margin-bottom: 8px; color: #1f2937; font-weight: 600; font-size: 13px;">👤 Usuario o Email</label>
+              <input type="text" id="student-email-login" placeholder="usuario o email@ejemplo.com" style="width: 100%; padding: 14px 16px; margin-bottom: 0; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#3b82f6';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" onblur="this.style.borderColor='#e5e7eb';this.style.boxShadow='none'">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; color: #1f2937; font-weight: 600; font-size: 13px;">🔐 Contraseña</label>
+              <input type="password" id="student-password-login" placeholder="••••••••" style="width: 100%; padding: 14px 16px; margin-bottom: 0; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px; transition: all 0.3s ease;" onfocus="this.style.borderColor='#3b82f6';this.style.boxShadow='0 0 0 3px rgba(59,130,246,0.1)'" onblur="this.style.borderColor='#e5e7eb';this.style.boxShadow='none'">
+            </div>
+            
+            <button onclick="loginStudent()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 700; margin-bottom: 12px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(59,130,246,0.3);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(59,130,246,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 15px rgba(59,130,246,0.3)'">🚀 Entrar</button>
+            
+            <button onclick="showStudentRegister()" style="width: 100%; padding: 12px; background: #f3f4f6; color: #1f2937; border: 2px solid #e5e7eb; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 12px; transition: all 0.3s ease;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">¿No tienes cuenta? Regístrate</button>
+            
+            <button onclick="showLogin()" style="width: 100%; padding: 12px; background: transparent; color: #6b7280; border: none; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.color='#3b82f6'" onmouseout="this.style.color='#6b7280'">← Volver</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('app').innerHTML = html;
+      document.getElementById('student-email-login').focus();
+    }
+
+
+    function registerStudent() {
+      const name = document.getElementById('student-name').value;
+      const username = document.getElementById('student-username').value;
+      const email = document.getElementById('student-email').value;
+      const course = document.getElementById('student-course').value;
+      const password = document.getElementById('student-password').value;
+      
+      if (!name || !username || !email || !course || !password) {
+        showToast('❌ Por favor completa todos los campos', 'error', '⚠️');
+        return;
+      }
+      
+      // Verificar si el email o usuario ya existen
+      const students = JSON.parse(localStorage.getItem('students') || '[]');
+      if (students.find(s => s.email === email)) {
+        showToast('❌ Este email ya está registrado', 'error', '⚠️');
+        return;
+      }
+      if (students.find(s => s.username === username)) {
+        showToast('❌ Este nombre de usuario ya está registrado', 'error', '⚠️');
+        return;
+      }
+      
+      const student = {
+        id: Date.now().toString(),
+        name,
+        username,
+        email,
+        course,
+        password
+      };
+      
+      // Guardar en lista de alumnos
+      students.push(student);
+      localStorage.setItem('students', JSON.stringify(students));
+      
+      currentStudent = student;
+      userRole = 'student';
+      localStorage.setItem('userRole', 'student');
+      localStorage.setItem('currentStudent', JSON.stringify(student));
+      
+      showToast(`✅ ¡Bienvenido ${name}!`, 'success', '👨‍🎓');
+      setTimeout(() => showHome(), 2000);
+    }
+
+    function loginStudent() {
+      const usernameOrEmail = document.getElementById('student-email-login').value;
+      const password = document.getElementById('student-password-login').value;
+      
+      if (!usernameOrEmail || !password) {
+        showToast('❌ Por favor completa todos los campos', 'error', '⚠️');
+        return;
+      }
+      
+      const students = JSON.parse(localStorage.getItem('students') || '[]');
+      const student = students.find(s => 
+        (s.email === usernameOrEmail || s.username === usernameOrEmail) && 
+        s.password === password
+      );
+      
+      if (!student) {
+        showToast('❌ Usuario/Email o contraseña incorrectos', 'error', '🔐');
+        return;
+      }
+      
+      currentStudent = student;
+      userRole = 'student';
+      localStorage.setItem('userRole', 'student');
+      localStorage.setItem('currentStudent', JSON.stringify(student));
+      
+      showToast(`✅ ¡Bienvenido ${student.name}!`, 'success', '👨‍🎓');
+      setTimeout(() => showHome(), 1000);
+    }
+
+    function logout() {
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('currentStudent');
+      userRole = null;
+      currentStudent = null;
+      showLogin();
+    }
+
+    function uploadFiles() {
+      const imageInput = document.getElementById('image-upload');
+      const videoInput = document.getElementById('video-upload');
+      const documentInput = document.getElementById('document-upload');
+
+      let uploadedCount = 0;
+      const totalInputs = 3;
+      const uploadedFiles = [];
+
+      // Procesar imágenes
+      if (imageInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          uploadedFiles.push({ type: 'image', name: imageInput.files[0].name });
+          uploadedCount++;
+          checkComplete();
+        };
+        reader.readAsDataURL(imageInput.files[0]);
+      } else {
+        uploadedCount++;
+        checkComplete();
+      }
+
+      // Procesar videos
+      if (videoInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          uploadedFiles.push({ type: 'video', name: videoInput.files[0].name });
+          uploadedCount++;
+          checkComplete();
+        };
+        reader.readAsDataURL(videoInput.files[0]);
+      } else {
+        uploadedCount++;
+        checkComplete();
+      }
+
+      // Procesar documentos
+      if (documentInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          uploadedFiles.push({ type: 'document', name: documentInput.files[0].name });
+          uploadedCount++;
+          checkComplete();
+        };
+        reader.readAsDataURL(documentInput.files[0]);
+      } else {
+        uploadedCount++;
+        checkComplete();
+      }
+
+      function checkComplete() {
+        if (uploadedCount === totalInputs && uploadedFiles.length > 0) {
+          // Limpiar inputs
+          imageInput.value = '';
+          videoInput.value = '';
+          documentInput.value = '';
+
+          // Mostrar mensaje de éxito
+          let message = '✅ Archivos subidos: ';
+          uploadedFiles.forEach(file => {
+            const icon = file.type === 'image' ? '🖼️' : file.type === 'video' ? '🎬' : '📄';
+            message += `${icon} ${file.name}, `;
+          });
+          showToast(message.slice(0, -2), 'success', '📤');
+        } else if (uploadedCount === totalInputs && uploadedFiles.length === 0) {
+          showToast('Por favor selecciona al menos un archivo para subir', 'error', '⚠️');
+        }
+      }
+    }
+
+    function handleFileUpload(input, type, postId) {
+      if (input.files.length > 0) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          // Guardar en localStorage con información completa
+          let uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
+          const newUpload = {
+            id: Date.now().toString(),
+            type: type,
+            name: file.name,
+            size: file.size,
+            postId: postId,
+            uploadedBy: currentStudent ? currentStudent.name : 'Anónimo',
+            uploadedByEmail: currentStudent ? currentStudent.email : 'N/A',
+            uploadedByRole: userRole,
+            uploadDate: new Date().toLocaleDateString('es-ES'),
+            uploadTime: new Date().toLocaleTimeString('es-ES'),
+            base64: e.target.result // Guardar archivo como base64
+          };
+          uploads.push(newUpload);
+          localStorage.setItem('uploads', JSON.stringify(uploads));
+          
+          const iconMap = { image: '🖼️', video: '🎬', document: '📄' };
+          showToast(`✅ ${iconMap[type]} "${file.name}" guardado en el bloc`, 'success', '📚');
+          input.value = '';
+          
+          // Refrescar galería si existe
+          displayUploadedFiles(postId);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function displayUploadedFiles(postId) {
+      const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
+      const postUploads = uploads.filter(u => u.postId === postId);
+      
+      const galleryContainer = document.getElementById(`gallery-${postId}`);
+      if (!galleryContainer) return;
+      
+      if (postUploads.length === 0) {
+        galleryContainer.innerHTML = '';
+        return;
+      }
+      
+      let html = '<div style="margin-top: 0;"><h4 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #1f2937;">📂 Recursos de la Comunidad:</h4>';
+      html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px;">';
+      
+      postUploads.forEach(upload => {
+        const sizeKB = (upload.size / 1024).toFixed(1);
+        let previewHtml = '';
+        
+        if (upload.type === 'image') {
+          // Mostrar imagen como miniatura
+          previewHtml = `
+            <div style="width: 100%; height: 140px; overflow: hidden; border-radius: 8px 8px 0 0; background: #e5e7eb;">
+              <img src="${upload.base64}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="mostrarVisor('${upload.id}');" title="Click para ampliar">
+            </div>
+          `;
+        } else if (upload.type === 'video') {
+          // Mostrar video con reproducción
+          previewHtml = `
+            <div style="width: 100%; height: 140px; overflow: hidden; border-radius: 8px 8px 0 0; background: #1f2937; display: flex; align-items: center; justify-content: center;">
+              <video style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" onclick="this.paused ? this.play() : this.pause();" title="Click para reproducir">
+                <source src="${upload.base64}" type="video/mp4">
+              </video>
+            </div>
+          `;
+        } else {
+          // Mostrar ícono para documentos
+          const docIcons = {
+            'pdf': '📕',
+            'doc': '📘',
+            'docx': '📘',
+            'xlsx': '📗',
+            'pptx': '📙'
+          };
+          const ext = upload.name.split('.').pop().toLowerCase();
+          const icon = docIcons[ext] || '📄';
+          previewHtml = `
+            <div style="width: 100%; height: 140px; border-radius: 8px 8px 0 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 48px;">
+              ${icon}
+            </div>
+          `;
+        }
+        
+        html += `
+          <div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+            ${previewHtml}
+            <div style="padding: 12px; background: white;">
+              <div style="font-size: 12px; font-weight: 600; word-break: break-word; margin-bottom: 6px; color: #1f2937; line-height: 1.4;">${upload.name}</div>
+              <div style="font-size: 11px; color: #6b7280; margin-bottom: 8px;">${sizeKB} KB • ${upload.date}</div>
+              <div style="display: flex; gap: 6px;">
+                <button onclick="descargarArchivo('${upload.id}')" style="flex: 1; background: #3b82f6; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600;">⬇️ Descargar</button>
+                <button onclick="eliminarArchivo('${upload.id}')" style="flex: 0.5; background: #ef4444; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 11px;">🗑️</button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div></div>';
+      galleryContainer.innerHTML = html;
+    }
+
+    function mostrarVisor(uploadId) {
+      const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
+      const upload = uploads.find(u => u.id === uploadId);
+      
+      if (upload && upload.type === 'image') {
+        const visor = document.createElement('div');
+        visor.style.cssText = `
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+          background: rgba(0,0,0,0.9); display: flex; align-items: center; 
+          justify-content: center; z-index: 10000; cursor: pointer;
+        `;
+        visor.innerHTML = `
+          <div style="max-width: 90%; max-height: 90%; position: relative;">
+            <img src="${upload.base64}" style="width: 100%; height: auto; border-radius: 8px;">
+            <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 10px; right: 10px; background: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 24px; cursor: pointer;">✕</button>
+          </div>
+        `;
+        visor.onclick = (e) => {
+          if (e.target === visor) visor.remove();
+        };
+        document.body.appendChild(visor);
+      }
+    }
+
+    function descargarArchivo(uploadId) {
+      const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
+      const upload = uploads.find(u => u.id === uploadId);
+      
+      if (upload) {
+        const link = document.createElement('a');
+        link.href = upload.base64;
+        link.download = upload.name;
+        link.click();
+      }
+    }
+
+    function eliminarArchivo(uploadId) {
+      if (confirm('¿Eliminar este archivo?')) {
+        let uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
+        uploads = uploads.filter(u => u.id !== uploadId);
+        localStorage.setItem('uploads', JSON.stringify(uploads));
+        
+        const allGalleries = document.querySelectorAll('[id^="gallery-"]');
+        allGalleries.forEach(gallery => {
+          const postId = gallery.id.replace('gallery-', '');
+          displayUploadedFiles(postId);
+        });
+        
+        showToast('✅ Archivo eliminado', 'success', '🗑️');
+      }
+    }
+
+
+    // Data SDK
+    const dataHandler = {
+      onDataChanged(data) {
+        allComments = data;
+        if (currentPost) {
+          renderComments();
+        }
+      }
+    };
+
+    function toggleLike(postId) {
+      const post = blogPosts.find(p => p.id === postId);
+      if (post) {
+        post.likes = (post.likes || 0) + 1;
+        localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+        showToast('¡Te gusta este artículo!', 'success', '👍');
+        if (currentPost === postId) {
+          renderComments();
+        }
+      }
+    }
+
+    function setRating(postId, stars) {
+      const post = blogPosts.find(p => p.id === postId);
+      if (post) {
+        post.rating = stars;
+        localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+        showToast(`¡Gracias por calificar con ${stars} ⭐!`, 'success', '⭐');
+        if (currentPost === postId) {
+          renderComments();
+        }
+      }
+    }
+
+    function searchPosts(term) {
+      searchTerm = term.toLowerCase();
+      if (currentCategory) {
+        document.getElementById('app').innerHTML = renderCategory(currentCategory);
+      }
+    }
+
+    async function addComment(postId, author, comment) {
+      if (allComments.length >= 999) {
+        showToast('Límite de comentarios alcanzado.', 'error', '⚠️');
+        return;
+      }
+
+      const submitButton = document.getElementById('submit-comment');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enviando...';
+      }
+
+      const newComment = {
+        postId: postId,
+        author: author.trim(),
+        comment: comment.trim(),
+        createdAt: new Date().toISOString()
+      };
+
+      let result = { isOk: true };
+      try {
+        if (window.dataSdk && typeof window.dataSdk.create === 'function') {
+          result = await window.dataSdk.create(newComment);
+        } else {
+          allComments.push(newComment);
+          localStorage.setItem('allComments', JSON.stringify(allComments));
+          result = { isOk: true };
+        }
+      } catch (err) {
+        console.error('Error creando comentario:', err);
+        result = { isOk: false };
+      }
+
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Publicar Comentario';
+      }
+
+      if (result && result.isOk) {
+        const authorInput = document.getElementById('author-input');
+        const commentInput = document.getElementById('comment-input');
+        if (authorInput) authorInput.value = '';
+        if (commentInput) commentInput.value = '';
+        showToast('¡Comentario publicado!', 'success', '✓');
+      } else {
+        showToast('Error al publicar. Intenta de nuevo.', 'error', '✗');
+      }
+    }
+
+    function showToast(message, type, icon) {
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.style.backgroundColor = type === 'success' ? defaultConfig.accent_color : '#ef4444';
+      toast.style.color = defaultConfig.secondary_color;
+      toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    function renderFooter(config) {
+      return `
+        <footer class="page-footer" style="background: linear-gradient(135deg, ${config.text_color} 0%, ${adjustColorBrightness(config.text_color, -15)} 100%); color: ${config.secondary_color}; padding: 60px var(--container-padding) 40px var(--container-padding); margin-top: 80px;">
+          <div class="container">
+            <!-- Footer Content Grid -->
+            <div class="footer-content">
+              <!-- Sobre la Escuela -->
+              <div class="footer-section">
+                <h3>🎓 Sobre Nosotros</h3>
+                <p class="muted small" style="line-height: 1.8;">
+                  Somos una institución comprometida con el desarrollo y la superación, a través de la educación y capacitación de profesionales plenamente formados en las áreas técnicas de inglés e informática, así como la educación media superior y superior, garantizando la formación mas avanzada y una permanente actualización tecnológica a través de la investigación y desarrollo de métodos educativos innovadores.
+                </p>
+              </div>
+              
+              <!-- Enlaces Rápidos -->
+              <div class="footer-section">
+                <h3>🔗 Enlaces Rápidos</h3>
+                <ul>
+                  <li><a href="#" onclick="showHome(); return false;">📌 Inicio</a></li>
+                  <li><a href="#" onclick="event.preventDefault(); showToast('Próximamente disponible', 'success', '🎯');">📚 Cursos</a></li>
+                  <li><a href="#" onclick="event.preventDefault(); showToast('Contactanos  al 232-373-7058', 'success', '✉️');">📧 Contacto</a></li>
+                  <li><a href="#" onclick="event.preventDefault(); showToast('Políticas de privacidad', 'success', '🔐');">🔒 Privacidad</a></li>
+                </ul>
+              </div>
+              
+              <!-- Categorías -->
+              <div class="footer-section">
+                <h3>📂 Categorías</h3>
+                <ul>
+                  ${categories.map(cat => `
+                    <li><a href="#" onclick="showCategory('${cat.id}'); return false;">${cat.icon} ${cat.name}</a></li>
+                  `).join('')}
+                </ul>
+              </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+              <p>${config.footer_text}</p>
+              <p class="muted small">POR LA SUPERACION HUMANA Y CULTURAL </p>
+              
+              <!-- Social Links -->
+              <div class="social-links">
+                <a href="https://www.facebook.com/profile.php?id=100044267690414" title="Facebook" onclick="event.preventDefault(); showToast('Síguenos en Facebook CEIT MARTINEZ', 'success', '👍');">f</a>
+                <a href="#" title="Twitter" onclick="event.preventDefault(); showToast('Síguenos en Twitter', 'success', '🐦');">𝕏</a>
+                <a href="#" title="Instagram" onclick="event.preventDefault(); showToast('Síguenos en Instagram', 'success', '📸');">📷</a>
+                <a href="#" title="LinkedIn" onclick="event.preventDefault(); showToast('Síguenos en LinkedIn', 'success', '💼');">in</a>
+              </div>
+            </div>
+          </div>
+        </footer>
+      `;
+    }
+
+    function renderHome() {
+      currentCategory = null;
+      currentPost = null;
+      
+      const config = window.elementSdk?.config || defaultConfig;
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+
+      // Usar configuración del Header del Alumno si existe, si no usar valores por defecto
+      const studentHeaderBg = config.student_header_backgroundImage || 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)';
+      const studentHeaderBgStyle = config.student_header_backgroundImage ? 
+        `background-image: url('${config.student_header_backgroundImage}'); background-size: cover; background-position: center;` :
+        `background: ${studentHeaderBg};`;
+      const studentHeaderTitle = config.student_header_title || config.blog_title;
+      const studentHeaderSubtitle = config.student_header_subtitle || config.blog_subtitle;
+      const studentHeaderLogo = config.student_header_logoImage || 'img/LOGO.png';
+      const studentHeaderLogoMaxHeight = config.student_header_logoMaxHeight || 150;
+
+      return `
+        <div class="page" style="background: linear-gradient(135deg, ${config.background_color} 0%, ${adjustColorBrightness(config.background_color, -5)} 100%);">
+          <!-- Hero Header - Elegante y Exagerado -->
+          <header class="page-header" style="${studentHeaderBgStyle} color: ${config.secondary_color}; padding: 60px var(--container-padding); position: relative; overflow: hidden; box-shadow: 0 25px 80px rgba(102, 126, 234, 0.35);">
+            ${config.student_header_backgroundImage ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);"></div>` : ''}
+            <!-- Elementos decorativos animados -->
+            <div style="position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; background: rgba(255,255,255,0.1); border-radius: 50%; filter: blur(50px); z-index: 0; animation: float 6s ease-in-out infinite;"></div>
+            <div style="position: absolute; bottom: -60px; left: -100px; width: 350px; height: 350px; background: rgba(255,255,255,0.12); border-radius: 50%; filter: blur(50px); z-index: 0; animation: float 8s ease-in-out infinite 1s;"></div>
+            <div style="position: absolute; top: 50%; left: 50%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%); border-radius: 50%; transform: translate(-50%, -50%); z-index: 0;"></div>
+            
+            <!-- Contenido header -->
+            <div style="position: relative; z-index: 10;">
+              <!-- Información de usuario y botón logout -->
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px;">
+                <div></div>
+                <div style="text-align: right;">
+                  ${currentStudent ? `
+                    <div style="margin-bottom: 15px; font-size: 14px; background: rgba(255,255,255,0.2); padding: 12px 20px; border-radius: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); display: inline-block; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                      <span style="font-size: 18px; margin-right: 8px;">👨‍🎓</span>${currentStudent.name}
+                    </div>
+                  ` : ''}
+                  <button onclick="logout()" style="padding: 12px 24px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 700; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); text-shadow: 0 1px 2px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 28px rgba(239, 68, 68, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 20px rgba(239, 68, 68, 0.3)'">🚪 Cerrar Sesión</button>
+                </div>
+              </div>
+              
+              <!-- Logo PRINCIPAL - Muy Grande y Destacado -->
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 30px; justify-content: center; text-align: center;">
+                <div style="width: 280px; height: 280px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 20px 60px rgba(0,0,0,0.3), inset 0 0 40px rgba(255,255,255,0.1); animation: float 4s ease-in-out infinite; flex-shrink: 0;">
+                  <img src="${studentHeaderLogo}" alt="CEIT logo" style="max-width: 240px; max-height: ${studentHeaderLogoMaxHeight}px; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4)); display: block;">
+                </div>
+                
+                <div class="header-title" style="flex: 1;">
+                  <h1 style="font-size: 56px; font-weight: 900; margin: 0; text-shadow: 0 8px 24px rgba(0,0,0,0.2); letter-spacing: 1px; line-height: 1.1;">${studentHeaderTitle}</h1>
+                  <p style="font-size: 20px; margin: 12px 0 0 0; opacity: 0.95; font-weight: 600; text-shadow: 0 2px 6px rgba(0,0,0,0.1);">${studentHeaderSubtitle}</p>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <style>
+            @keyframes float {
+              0%, 100% { transform: translateY(0px); }
+              50% { transform: translateY(-30px); }
+            }
+          </style>
+
+          <!-- Search Bar with Enhanced Style -->
+          <div class="container" style="padding: 50px var(--container-padding) 30px var(--container-padding);">
+            <div style="position: relative;">
+              <input 
+                type="text" 
+                id="search-input"
+                class="search-bar"
+                placeholder="🔍 Busca temas, cursos, tutoriales..."
+                style="border-color: ${config.primary_color}; font-size: 16px; padding: 16px 24px;"
+                onkeyup="searchPosts(this.value)"
+              />
+              <div style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: ${config.primary_color}; font-size: 18px; pointer-events: none;">🎓</div>
+            </div>
+          </div>
+
+          <!-- Categories Section with Enhanced Design -->
+          <div class="container" style="padding: 40px var(--container-padding) 80px var(--container-padding); flex-grow: 1;">
+            <div style="text-align: center; margin-bottom: 50px;">
+              <h2 class="section-title" style="color: ${config.text_color}; font-family: ${customFont}, ${baseFontStack}; margin-bottom: 12px;">📚 Explora Nuestras Categorías</h2>
+              <p style="color: ${adjustColorBrightness(config.text_color, 40)}; font-size: 16px; margin: 0; font-weight: 300;">Selecciona un área de estudio y comienza tu aprendizaje hoy</p>
+            </div>
+            <div class="grid-categories">
+              ${categories.map((cat, idx) => `
+                <div 
+                  class="category-card card" 
+                  onclick="showCategory('${cat.id}')"
+                  style="background: linear-gradient(135deg, ${config.secondary_color} 0%, ${adjustColorBrightness(config.secondary_color, -3)} 100%); border-top: 5px solid ${config.accent_color}; box-shadow: 0 4px 15px rgba(0,0,0,0.08); animation-delay: ${idx * 50}ms;"
+                >
+                  <div class="category-icon" style="font-size: 64px; background: linear-gradient(135deg, ${config.primary_color}20, ${config.accent_color}20); width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; border-radius: 16px; margin: 0 auto 24px auto;">${cat.icon}</div>
+                  <h3 class="card-title" style="color: ${config.text_color}; font-family: ${customFont}, ${baseFontStack}; text-align: center;">${cat.name}</h3>
+                  <p class="card-desc" style="color: ${adjustColorBrightness(config.text_color, 40)}; font-family: ${customFont}, ${baseFontStack}; text-align: center; margin-bottom: 20px;">${cat.description}</p>
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid ${adjustColorBrightness(config.background_color, -10)};">
+                    <span style="font-size: 12px; color: ${config.primary_color}; font-weight: 600;">Ver categoría →</span>
+                    <span style="background: ${config.primary_color}20; color: ${config.primary_color}; padding: 6px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">${blogPosts.filter(p => p.category === cat.id).length} temas</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          ${renderFooter(config)}
+        </div>
+      `;
+    }
+
+    function renderCategory(categoryId) {
+      const config = window.elementSdk?.config || defaultConfig;
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      
+      const category = categories.find(c => c.id === categoryId);
+      let posts = blogPosts.filter(p => p.category === categoryId);
+      
+      if (searchTerm) {
+        posts = posts.filter(p => 
+          p.title.toLowerCase().includes(searchTerm) || 
+          p.excerpt.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      // Usar configuración del Header del Alumno si existe
+      const studentHeaderBg = config.student_header_backgroundImage || `linear-gradient(135deg, ${config.primary_color} 0%, ${adjustColorBrightness(config.primary_color, -25)} 100%)`;
+      const studentHeaderBgStyle = config.student_header_backgroundImage ? 
+        `background-image: url('${config.student_header_backgroundImage}'); background-size: cover; background-position: center;` :
+        `background: ${studentHeaderBg};`;
+
+      return `
+        <div class="page" style="background: linear-gradient(135deg, ${config.background_color} 0%, ${adjustColorBrightness(config.background_color, -5)} 100%);">
+          <!-- Header con Estilo Mejorado -->
+          <header class="page-header" style="${studentHeaderBgStyle} color: ${config.secondary_color}; padding: 50px var(--container-padding); position: relative; overflow: hidden;">
+            ${config.student_header_backgroundImage ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);"></div>` : ''}
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; background-image: radial-gradient(circle at 20% 80%, #fff 0%, transparent 50%), radial-gradient(circle at 80% 20%, #fff 0%, transparent 50%); pointer-events: none;"></div>
+            <div class="container" style="position: relative; z-index: 1;">
+              <button class="btn-interactive" onclick="showHome()" style="background: rgba(255,255,255,0.2); color: ${config.secondary_color}; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.3);">← Volver al Inicio</button>
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="font-size: 48px;">${category.icon}</div>
+                <div>
+                  <h1 style="margin: 0; font-size: 42px; font-weight: 800; letter-spacing: -1px;">${category.name}</h1>
+                  <p style="margin: 8px 0 0 0; opacity: 0.95; font-size: 16px; font-weight: 300;">${category.description}</p>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <!-- Search Bar Mejorada -->
+          <div class="container" style="padding: 40px var(--container-padding) 30px var(--container-padding);">
+            <div style="position: relative;">
+              <input 
+                type="text" 
+                class="search-bar"
+                placeholder="🔍 Buscar en ${category.name}..."
+                style="border-color: ${config.primary_color}; font-size: 16px; padding: 16px 24px;"
+                onkeyup="searchPosts(this.value)"
+              />
+              <div style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: ${config.primary_color}; font-size: 18px; pointer-events: none;">📖</div>
+            </div>
+          </div>
+
+          <div class="container" style="padding: 20px var(--container-padding) 80px var(--container-padding); flex-grow: 1;">
+            ${posts.length === 0 ? `
+              <div class="empty-state">
+                <div style="font-size: 64px; margin-bottom: 16px;">📭</div>
+                <p style="color: ${adjustColorBrightness(config.text_color, 40)}; font-family: ${customFont}, ${baseFontStack}; font-size: 18px;">No se encontraron artículos en esta categoría</p>
+                <button class="btn-interactive" onclick="showHome()" style="margin-top: 24px; background-color: ${config.primary_color}; color: ${config.secondary_color};">Explorar Otras Categorías</button>
+              </div>
+            ` : `
+              <div style="margin-bottom: 32px;">
+                <p style="color: ${adjustColorBrightness(config.text_color, 40)}; font-size: 14px; margin: 0; font-weight: 600;">📚 ${posts.length} TEMAS DISPONIBLES</p>
+              </div>
+              <div class="grid-posts">
+                ${posts.map((post, idx) => {
+                  let iconHtml = post.icon;
+                  let iconStyle = '';
+                  if (post.icon && post.icon.startsWith('data:')) {
+                    iconHtml = '';
+                    iconStyle = `background-image: url('${post.icon}'); background-size: cover; background-position: center;`;
+                  }
+                  return `
+                  <div 
+                    class="post-card card"
+                    onclick="showPost('${post.id}')"
+                    style="background: linear-gradient(135deg, ${config.secondary_color} 0%, ${adjustColorBrightness(config.secondary_color, -2)} 100%); border-left: 6px solid ${config.accent_color}; box-shadow: 0 4px 15px rgba(0,0,0,0.08); overflow: hidden; animation-delay: ${idx * 30}ms;"
+                  >
+                    <div class="post-icon" style="${iconStyle} width: 100%; height: 160px; margin-bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 56px; border-radius: 0; background-color: ${config.primary_color}20; position: relative; overflow: hidden;">${iconHtml}</div>
+                    <div style="padding: 20px;">
+                      <h3 class="post-title" style="color: ${config.text_color}; font-family: ${customFont}, ${baseFontStack}; margin-bottom: 12px;">${post.title}</h3>
+                      <p class="post-excerpt" style="color: ${adjustColorBrightness(config.text_color, 40)}; font-family: ${customFont}, ${baseFontStack}; margin-bottom: 16px; line-height: 1.5;">${post.excerpt}</p>
+                      <div class="post-footer" style="border-top-color: ${adjustColorBrightness(config.background_color, -10)}; padding-top: 12px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <small class="post-date" style="color: ${adjustColorBrightness(config.text_color, 60)}; font-family: ${customFont}, ${baseFontStack}; font-size: 12px;">📅 ${post.date}</small>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                          <span style="color: ${config.accent_color}; font-weight: 600; font-size: 14px;">👍 ${post.likes}</span>
+                          <div style="width: 24px; height: 24px; background: ${config.accent_color}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">→</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `;
+                }).join('')}
+              </div>
+            `}
+          </div>
+
+          ${renderFooter(config)}
+        </div>
+      `;
+    }
+
+    function renderPost(postId) {
+      const config = window.elementSdk?.config || defaultConfig;
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      
+      const post = blogPosts.find(p => p.id === postId);
+      const category = categories.find(c => c.id === post.category);
+
+      // Usar configuración del Header del Alumno si existe
+      const studentHeaderBg = config.student_header_backgroundImage || `linear-gradient(135deg, ${config.primary_color} 0%, ${adjustColorBrightness(config.primary_color, -20)} 100%)`;
+      const studentHeaderBgStyle = config.student_header_backgroundImage ? 
+        `background-image: url('${config.student_header_backgroundImage}'); background-size: cover; background-position: center;` :
+        `background: ${studentHeaderBg};`;
+
+      return `
+        <div style="background-color: ${config.background_color}; min-height: 100%; display: flex; flex-direction: column;">
+          <!-- Header -->
+          <header style="${studentHeaderBgStyle} color: ${config.secondary_color}; padding: 40px 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); position: relative; overflow: hidden;">
+            ${config.student_header_backgroundImage ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);"></div>` : ''}
+            <div style="max-width: 900px; margin: 0 auto; position: relative; z-index: 1;">
+              <button class="btn-interactive" onclick="showCategory('${post.category}')" style="background: rgba(255,255,255,0.2); color: ${config.secondary_color}; margin-bottom: 20px;">← ${category.name}</button>
+              <div style="display: flex; gap: 20px; align-items: flex-start;">
+                <div style="width: 100px; height: 100px; background-size: cover; background-position: center; border-radius: 12px; flex-shrink: 0; background-image: url('${post.icon}'); border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2);"></div>
+                <div style="flex: 1;">
+                  <h1 style="margin: 0; font-size: 36px; font-weight: 800;">${post.title}</h1>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <div style="max-width: 900px; margin: 0 auto; padding: 50px 24px 60px 24px; width: 100%; flex-grow: 1;">
+            <!-- Metadatos mejorados -->
+            <div style="display: flex; gap: 24px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 3px solid ${config.accent_color}; flex-wrap: wrap; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">📅</span>
+                <span style="color: ${adjustColorBrightness(config.text_color, 40)}; font-family: ${customFont}, ${baseFontStack}; font-size: 14px; font-weight: 600;">${post.date}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">📂</span>
+                <span style="color: ${config.primary_color}; font-family: ${customFont}, ${baseFontStack}; font-size: 14px; font-weight: 600; background: ${config.primary_color}15; padding: 4px 12px; border-radius: 12px;">${category.name}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+                <span style="font-size: 20px;">👍</span>
+                <span style="color: ${config.accent_color}; font-family: ${customFont}, ${baseFontStack}; font-size: 14px; font-weight: 600;">${post.likes} Likes</span>
+              </div>
+            </div>
+
+            <!-- Contenido del artículo con mejor diseño -->
+            <div style="background: linear-gradient(135deg, ${config.secondary_color} 0%, ${adjustColorBrightness(config.secondary_color, -1)} 100%); padding: 48px; border-radius: 16px; margin-bottom: 40px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-left: 6px solid ${config.primary_color};">
+              <div style="margin-bottom: 28px; padding-bottom: 28px; border-bottom: 2px solid ${adjustColorBrightness(config.background_color, -10)};">
+                <p style="color: ${config.text_color}; line-height: 2; font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize + 2}px; margin: 0; font-weight: 500;">
+                  ${post.excerpt}
+                </p>
+              </div>
+              <div style="color: ${adjustColorBrightness(config.text_color, 35)}; line-height: 1.95; font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize}px;">
+                ${post.content || 'Este es un artículo introductorio sobre ' + post.title.toLowerCase() + '. Para obtener más información y ejemplos prácticos, te invitamos a participar en nuestros cursos en línea.'}
+              </div>
+            </div>
+
+            <!-- Upload de Recursos con Diseño Mejorado -->
+            <div style="background: linear-gradient(135deg, ${config.accent_color} 0%, ${adjustColorBrightness(config.accent_color, -20)} 100%); padding: 48px; border-radius: 16px; margin-bottom: 40px; color: ${config.secondary_color}; box-shadow: 0 12px 32px rgba(0,0,0,0.15);">
+              <h2 style="margin: 0 0 12px 0; font-family: ${customFont}, ${baseFontStack}; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px;">📚 Comparte Recursos</h2>
+              <p style="margin: 0 0 32px 0; opacity: 0.95; font-size: 15px; line-height: 1.6; font-weight: 300;">Sube fotos, videos o documentos relacionados con este tema para enriquecer el aprendizaje de toda la comunidad.</p>
+              
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 12px; border: 3px dashed rgba(255,255,255,0.6); cursor: pointer; text-align: center; transition: all 0.3s ease;" onclick="document.getElementById('img-input-${post.id}').click();" onmouseover="this.style.background='rgba(255,255,255,0.25)';this.style.transform='scale(1.05)'" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='scale(1)'">
+                  <div style="font-size: 40px; margin-bottom: 10px;">🖼️</div>
+                  <span style="font-size: 13px; font-weight: 700;">Imagen</span>
+                  <input type="file" id="img-input-${post.id}" accept="image/*" style="display: none;" onchange="handleFileUpload(this, 'image', '${post.id}')">
+                </div>
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 12px; border: 3px dashed rgba(255,255,255,0.6); cursor: pointer; text-align: center; transition: all 0.3s ease;" onclick="document.getElementById('vid-input-${post.id}').click();" onmouseover="this.style.background='rgba(255,255,255,0.25)';this.style.transform='scale(1.05)'" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='scale(1)'">
+                  <div style="font-size: 40px; margin-bottom: 10px;">🎬</div>
+                  <span style="font-size: 13px; font-weight: 700;">Video</span>
+                  <input type="file" id="vid-input-${post.id}" accept="video/*" style="display: none;" onchange="handleFileUpload(this, 'video', '${post.id}')">
+                </div>
+                <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 12px; border: 3px dashed rgba(255,255,255,0.6); cursor: pointer; text-align: center; transition: all 0.3s ease;" onclick="document.getElementById('doc-input-${post.id}').click();" onmouseover="this.style.background='rgba(255,255,255,0.25)';this.style.transform='scale(1.05)'" onmouseout="this.style.background='rgba(255,255,255,0.15)';this.style.transform='scale(1)'">
+                  <div style="font-size: 40px; margin-bottom: 10px;">📄</div>
+                  <span style="font-size: 13px; font-weight: 700;">Documento</span>
+                  <input type="file" id="doc-input-${post.id}" accept=".pdf,.doc,.docx,.xlsx,.pptx" style="display: none;" onchange="handleFileUpload(this, 'document', '${post.id}')">
+                </div>
+              </div>
+              <small style="opacity: 0.9; font-size: 12px;">JPG, PNG, GIF • MP4, WebM • PDF, Word, Excel, PowerPoint</small>
+            </div>
+
+            <!-- Galería de Archivos Cargados -->
+            <div id="gallery-${post.id}" style="background: #f3f4f6; padding: 24px; border-radius: 12px; margin-bottom: 40px; border-left: 4px solid ${config.accent_color};"></div>
+
+            <!-- Interactividad -->
+            <div style="display: flex; gap: 20px; margin-bottom: 40px; flex-wrap: wrap; align-items: center;">
+              <button class="btn-interactive" onclick="toggleLike('${post.id}')" style="background-color: ${config.accent_color}; color: ${config.secondary_color};">👍 Me gusta (${post.likes})</button>
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <label style="color: ${config.text_color}; font-family: ${customFont}, ${baseFontStack}; font-weight: 600;">Califica:</label>
+                <div class="rating">
+                  ${[1,2,3,4,5].map(i => `
+                    <span class="star" onclick="setRating('${post.id}', ${i})" style="color: ${post.rating >= i ? '#fbbf24' : '#d1d5db'}; cursor: pointer;">★</span>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+
+            <!-- Comentarios -->
+            <div style="background-color: ${config.secondary_color}; padding: 40px; border-radius: 14px; border-top: 5px solid ${config.primary_color}; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+              <h2 style="color: ${config.text_color}; margin: 0 0 28px 0; font-family: ${customFont}, ${baseFontStack}; font-size: 26px; font-weight: 700;">💬 Comentarios</h2>
+              
+              <!-- Formulario de comentarios -->
+              <form id="comment-form" style="margin-bottom: 36px; padding-bottom: 36px; border-bottom: 2px solid ${adjustColorBrightness(config.background_color, -10)};">
+                <div style="margin-bottom: 16px;">
+                  <input 
+                    type="text" 
+                    id="author-input" 
+                    placeholder="Tu nombre..." 
+                    required
+                    style="width: 100%; padding: 14px; border: 2px solid ${adjustColorBrightness(config.background_color, -15)}; border-radius: 10px; font-family: ${customFont}, ${baseFontStack}; box-sizing: border-box; font-size: 15px; transition: all 0.3s ease;"
+                    onfocus="this.style.borderColor='${config.primary_color}'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)';"
+                    onblur="this.style.borderColor='${adjustColorBrightness(config.background_color, -15)}'; this.style.boxShadow='none';"
+                  />
+                </div>
+                <div style="margin-bottom: 16px;">
+                  <textarea 
+                    id="comment-input" 
+                    placeholder="Comparte tu comentario..." 
+                    rows="5"
+                    required
+                    style="width: 100%; padding: 14px; border: 2px solid ${adjustColorBrightness(config.background_color, -15)}; border-radius: 10px; font-family: ${customFont}, ${baseFontStack}; resize: vertical; box-sizing: border-box; font-size: 15px; transition: all 0.3s ease;"
+                    onfocus="this.style.borderColor='${config.primary_color}'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)';"
+                    onblur="this.style.borderColor='${adjustColorBrightness(config.background_color, -15)}'; this.style.boxShadow='none';"
+                  ></textarea>
+                </div>
+                <button 
+                  type="submit" 
+                  id="submit-comment"
+                  class="btn-interactive"
+                  style="background-color: ${config.primary_color}; color: ${config.secondary_color}; width: 100%; justify-content: center;"
+                >
+                  ✉️ Publicar Comentario
+                </button>
+              </form>
+
+              <!-- Lista de comentarios -->
+              <div id="comments-list"></div>
+            </div>
+          </div>
+
+          ${renderFooter(config)}
+        </div>
+      `;
+    }
+
+    function renderComments() {
+      const config = window.elementSdk?.config || defaultConfig;
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      
+      const postComments = allComments
+        .filter(c => c.postId === currentPost)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      const commentsList = document.getElementById('comments-list');
+      if (!commentsList) return;
+
+      if (postComments.length === 0) {
+        commentsList.innerHTML = `
+          <p style="font-family: ${customFont}, ${baseFontStack}; font-size: ${baseSize * 0.9}px; color: ${adjustColorBrightness(config.text_color, 60)}; text-align: center; padding: 40px 24px;">
+            Sé el primero en comentar este artículo 🎉
+          </p>
+        `;
+        return;
+      }
+
+      commentsList.innerHTML = postComments.map(comment => {
+        const date = new Date(comment.createdAt);
+        const formattedDate = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        
+        return `
+          <div class="comment-item" style="border-left: 5px solid ${config.accent_color}; padding: 20px; margin-bottom: 16px; background-color: ${adjustColorBrightness(config.background_color, 8)}; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+              <strong style="color: ${config.text_color}; font-family: ${customFont}, ${baseFontStack}; font-size: 16px;">👤 ${comment.author}</strong>
+              <small style="color: ${adjustColorBrightness(config.text_color, 60)}; font-family: ${customFont}, ${baseFontStack}; font-size: 13px;">🕐 ${formattedDate}</small>
+            </div>
+            <p style="color: ${config.text_color}; margin: 0; line-height: 1.7; font-family: ${customFont}, ${baseFontStack}; font-size: 15px;">${comment.comment}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function showHome() {
+      document.getElementById('app').innerHTML = renderHome();
+    }
+
+    function showCategory(categoryId) {
+      currentCategory = categoryId;
+      currentPost = null;
+      searchTerm = "";
+      document.getElementById('app').innerHTML = renderCategory(categoryId);
+    }
+
+    function showPost(postId) {
+      currentPost = postId;
+      document.getElementById('app').innerHTML = renderPost(postId);
+      renderComments();
+      
+      // Cargar archivos guardados de este post
+      setTimeout(() => displayUploadedFiles(postId), 100);
+
+      const form = document.getElementById('comment-form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const author = document.getElementById('author-input').value;
+        const comment = document.getElementById('comment-input').value;
+        
+        if (author.trim() && comment.trim()) {
+          await addComment(postId, author, comment);
+        }
+      });
+    }
+
+    function adjustColorBrightness(hex, percent) {
+      const num = parseInt(hex.replace('#', ''), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = Math.min(255, Math.max(0, (num >> 16) + amt));
+      const G = Math.min(255, Math.max(0, (num >> 8 & 0x00FF) + amt));
+      const B = Math.min(255, Math.max(0, (num & 0x0000FF) + amt));
+      return '#' + (0x1000000 + (R * 0x10000) + (G * 0x100) + B).toString(16).slice(1);
+    }
+
+    async function onConfigChange(config) {
+      if (currentPost) {
+        document.getElementById('app').innerHTML = renderPost(currentPost);
+        renderComments();
+        const form = document.getElementById('comment-form');
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const author = document.getElementById('author-input').value;
+          const comment = document.getElementById('comment-input').value;
+          
+          if (author.trim() && comment.trim()) {
+            await addComment(currentPost, author, comment);
+          }
+        });
+      } else if (currentCategory) {
+        document.getElementById('app').innerHTML = renderCategory(currentCategory);
+      } else {
+        showHome();
+      }
+    }
+
+    function showAdminPanel() {
+      const html = `
+        <div class="page" style="background: #f3f4f6;">
+          <!-- Header Admin -->
+          <div style="background: ${defaultConfig.adminHeaderBackgroundImage ? `url('${defaultConfig.adminHeaderBackgroundImage}')` : 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)'}; background-size: cover; background-position: center; padding: 28px 24px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25); position: relative;">
+            ${defaultConfig.adminHeaderBackgroundImage ? `<div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4);"></div>` : ''}
+            <div style="position: relative; z-index: 10;">
+              <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 0.5px;">🔧 Panel Administrativo</h1>
+              <p style="margin: 6px 0 0 0; opacity: 0.9; font-size: 14px; font-weight: 500;">Gestiona el contenido del blog y sistema</p>
+            </div>
+            <button onclick="logout()" style="position: relative; z-index: 10; padding: 11px 22px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 22px rgba(239, 68, 68, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(239, 68, 68, 0.3)'">🚪 Cerrar Sesión</button>
+          </div>
+
+          <!-- Contenido Admin -->
+          <div style="max-width: 1200px; margin: 0 auto; width: 100%; padding: 24px;">
+            
+            <!-- SECCIÓN 1: Configuración del Blog -->
+            <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 40px;">
+              <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 700; color: #1f2937;">⚙️ Configuración del Blog</h2>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                <!-- Título -->
+                <div>
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">📝 Título del Blog</label>
+                  <input type="text" id="edit-title" value="${defaultConfig.blog_title || ''}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                  <button onclick="updateBlogConfig('blog_title', document.getElementById('edit-title').value)" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                </div>
+
+                <!-- Subtítulo -->
+                <div>
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">💬 Subtítulo</label>
+                  <input type="text" id="edit-subtitle" value="${defaultConfig.blog_subtitle || ''}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                  <button onclick="updateBlogConfig('blog_subtitle', document.getElementById('edit-subtitle').value)" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                </div>
+
+                <!-- Color Primario -->
+                <div>
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">🎨 Color Primario</label>
+                  <input type="color" id="edit-color" value="${defaultConfig.primary_color || '#3b82f6'}" style="width: 100%; height: 40px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer;">
+                  <button onclick="updateBlogConfig('primary_color', document.getElementById('edit-color').value)" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                </div>
+              </div>
+
+              <!-- Separador -->
+              <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 20px;">
+                <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 700; color: #1f2937;">🖼️ Imagen de Fondo para Login</h3>
+                <p style="margin: 0 0 12px 0; color: #6b7280; font-size: 13px;">Personaliza el fondo de las páginas de inicio de sesión y registro</p>
+                
+                <div style="display: flex; gap: 16px; align-items: flex-start;">
+                  <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Selecciona una imagen</label>
+                    <input type="file" id="login-bg-upload" accept="image/*" onchange="handleLoginBackgroundUpload()" style="width: 100%; padding: 10px; border: 2px dashed #3b82f6; border-radius: 6px; margin-bottom: 10px; font-size: 13px; cursor: pointer; background: #f0f9ff;">
+                    <button onclick="document.getElementById('login-bg-upload').click()" style="width: 100%; padding: 10px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 8px;">📤 Seleccionar Imagen</button>
+                    ${defaultConfig.loginBackgroundImage ? `<button onclick="clearLoginBackground()" style="width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">🗑️ Eliminar Imagen</button>` : ''}
+                  </div>
+                  
+                  <div style="width: 200px; height: 120px; border: 2px solid #e5e7eb; border-radius: 6px; background-size: cover; background-position: center; ${defaultConfig.loginBackgroundImage ? `background-image: url('${defaultConfig.loginBackgroundImage}')` : 'background: linear-gradient(135deg, #3b82f6 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 12px; text-align: center;'}">
+                    ${!defaultConfig.loginBackgroundImage ? 'Vista previa' : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 1B: Configuración de Textos de Login -->
+            <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 40px;">
+              <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 700; color: #1f2937;">✏️ Editar Textos de Login</h2>
+              <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 13px;">Personaliza todos los textos que aparecen en la pantalla de inicio de sesión</p>
+              
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                <!-- Título -->
+                <div>
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Título Principal</label>
+                  <input type="text" id="edit-login-title" value="${defaultConfig.login_title || ''}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                  <button onclick="updateBlogConfig('login_title', document.getElementById('edit-login-title').value); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                </div>
+
+                <!-- Subtítulo -->
+                <div>
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Subtítulo</label>
+                  <input type="text" id="edit-login-subtitle" value="${defaultConfig.login_subtitle || ''}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                  <button onclick="updateBlogConfig('login_subtitle', document.getElementById('edit-login-subtitle').value); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                </div>
+
+                <!-- Botón Admin -->
+                <div>
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Botón Administrador</label>
+                  <input type="text" id="edit-login-btn-admin" value="${defaultConfig.login_btn_admin || ''}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                  <button onclick="updateBlogConfig('login_btn_admin', document.getElementById('edit-login-btn-admin').value); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                </div>
+
+                <!-- Botón Registro -->
+                <div>
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Botón Registro</label>
+                  <input type="text" id="edit-login-btn-register" value="${defaultConfig.login_btn_register || ''}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                  <button onclick="updateBlogConfig('login_btn_register', document.getElementById('edit-login-btn-register').value); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                </div>
+
+                <!-- Botón Login -->
+                <div>
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Botón Iniciar Sesión</label>
+                  <input type="text" id="edit-login-btn-login" value="${defaultConfig.login_btn_login || ''}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                  <button onclick="updateBlogConfig('login_btn_login', document.getElementById('edit-login-btn-login').value); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                </div>
+
+                <!-- Footer Línea 1 -->
+                <div>
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Pie de Página - Línea 1</label>
+                  <input type="text" id="edit-login-footer-line1" value="${defaultConfig.login_footer_line1 || ''}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                  <button onclick="updateBlogConfig('login_footer_line1', document.getElementById('edit-login-footer-line1').value); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                </div>
+
+                <!-- Footer Línea 2 -->
+                <div>
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Pie de Página - Línea 2</label>
+                  <input type="text" id="edit-login-footer-line2" value="${defaultConfig.login_footer_line2 || ''}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                  <button onclick="updateBlogConfig('login_footer_line2', document.getElementById('edit-login-footer-line2').value); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 1C: Configuración de Imagen de Fondo - Header Admin -->
+            <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 40px;">
+              <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 700; color: #1f2937;">🖼️ Imagen de Fondo - Header Administrativo</h2>
+              <p style="margin: 0 0 12px 0; color: #6b7280; font-size: 13px;">Personaliza el fondo del encabezado del panel administrativo</p>
+              
+              <div style="display: flex; gap: 16px; align-items: flex-start;">
+                <div style="flex: 1;">
+                  <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Selecciona una imagen</label>
+                  <input type="file" id="admin-header-bg-upload" accept="image/*" onchange="handleAdminHeaderBackgroundUpload()" style="width: 100%; padding: 10px; border: 2px dashed #3b82f6; border-radius: 6px; margin-bottom: 10px; font-size: 13px; cursor: pointer; background: #f0f9ff;">
+                  <button onclick="document.getElementById('admin-header-bg-upload').click()" style="width: 100%; padding: 10px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 8px;">📤 Seleccionar Imagen</button>
+                  ${defaultConfig.adminHeaderBackgroundImage ? `<button onclick="clearAdminHeaderBackground()" style="width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">🗑️ Eliminar Imagen</button>` : ''}
+                </div>
+                
+                <div style="width: 200px; height: 120px; border: 2px solid #e5e7eb; border-radius: 6px; background-size: cover; background-position: center; ${defaultConfig.adminHeaderBackgroundImage ? `background-image: url('${defaultConfig.adminHeaderBackgroundImage}')` : 'background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 12px; text-align: center;'}">
+                  ${!defaultConfig.adminHeaderBackgroundImage ? 'Vista previa' : ''}
+                </div>
+              </div>
+            </div>
+
+              <!-- SECCIÓN 1D: Configuración del Header del Alumno -->
+              <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 40px;">
+                <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 700; color: #1f2937;">🖋️ Header del Alumno (Editable)</h2>
+                <div style="display:flex; gap:12px; align-items:center; justify-content:space-between;">
+                  <p style="margin: 0 0 12px 0; color: #6b7280; font-size: 13px;">Edita el título, subtítulo, texto CTA, tamaño del logo y sube imágenes de fondo/logo para la cabecera del alumno.</p>
+                  <div style="display:flex; gap:8px;">
+                    <button onclick="showStudentHeaderPreview()" style="padding:8px 12px; background:#06b6d4; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700;">👁️ Vista previa</button>
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 12px;">
+                  <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Título del Header</label>
+                    <input type="text" id="edit-student-header-title" value="${defaultConfig.student_header_title || defaultConfig.blog_title}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                    <button onclick="updateBlogConfig('student_header_title', document.getElementById('edit-student-header-title').value); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                  </div>
+
+                  <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Subtítulo</label>
+                    <input type="text" id="edit-student-header-subtitle" value="${defaultConfig.student_header_subtitle || defaultConfig.blog_subtitle}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                    <button onclick="updateBlogConfig('student_header_subtitle', document.getElementById('edit-student-header-subtitle').value); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                  </div>
+
+                  <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Texto CTA</label>
+                    <input type="text" id="edit-student-header-cta" value="${defaultConfig.student_header_cta_text || 'Comenzar'}" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                    <button onclick="updateBlogConfig('student_header_cta_text', document.getElementById('edit-student-header-cta').value); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                  </div>
+
+                  <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Altura máx. del logo (px)</label>
+                    <input type="number" id="edit-student-header-logo-maxh" value="${defaultConfig.student_header_logoMaxHeight || 150}" min="40" max="400" style="width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+                    <button onclick="updateBlogConfig('student_header_logoMaxHeight', Number(document.getElementById('edit-student-header-logo-maxh').value)); showAdminPanel();" style="width: 100%; padding: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">Guardar</button>
+                  </div>
+                </div>
+
+                <div style="border-top: 1px solid #e5e7eb; padding-top: 18px; margin-top: 18px; display: flex; gap: 16px; align-items: flex-start;">
+                  <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Seleccionar Fondo del Header (Alumno)</label>
+                    <input type="file" id="student-header-bg-upload" accept="image/*" onchange="handleStudentHeaderBackgroundUpload()" style="width: 100%; padding: 10px; border: 2px dashed #3b82f6; border-radius: 6px; margin-bottom: 10px; font-size: 13px; cursor: pointer; background: #f0f9ff;">
+                    <button onclick="document.getElementById('student-header-bg-upload').click()" style="width: 100%; padding: 10px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 8px;">📤 Seleccionar Fondo</button>
+                    ${defaultConfig.student_header_backgroundImage ? `<button onclick="clearStudentHeaderBackground()" style="width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">🗑️ Eliminar Fondo</button>` : ''}
+                  </div>
+
+                  <div style="width: 220px; height: 120px; border: 2px solid #e5e7eb; border-radius: 6px; background-size: cover; background-position: center; ${defaultConfig.student_header_backgroundImage ? `background-image: url('${defaultConfig.student_header_backgroundImage}')` : 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 12px; text-align: center;'}">
+                    ${!defaultConfig.student_header_backgroundImage ? 'Vista previa fondo' : ''}
+                  </div>
+                </div>
+
+                <div style="border-top: 1px solid #e5e7eb; padding-top: 18px; margin-top: 18px; display: flex; gap: 16px; align-items: flex-start;">
+                  <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1f2937; font-size: 14px;">Seleccionar Logo (reemplaza img/LOGO.png)</label>
+                    <input type="file" id="student-header-logo-upload" accept="image/*" onchange="handleStudentLogoUpload()" style="width: 100%; padding: 10px; border: 2px dashed #3b82f6; border-radius: 6px; margin-bottom: 10px; font-size: 13px; cursor: pointer; background: #f0f9ff;">
+                    <button onclick="document.getElementById('student-header-logo-upload').click()" style="width: 100%; padding: 10px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 8px;">📤 Seleccionar Logo</button>
+                    ${defaultConfig.student_header_logoImage ? `<button onclick="clearStudentLogo()" style="width: 100%; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;">🗑️ Eliminar Logo</button>` : ''}
+                  </div>
+
+                  <div style="width: 220px; height: 120px; border: 2px solid #e5e7eb; border-radius: 6px; background-size: contain; background-repeat: no-repeat; background-position: center; ${defaultConfig.student_header_logoImage ? `background-image: url('${defaultConfig.student_header_logoImage}')` : 'display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 12px; text-align: center;'}">
+                    ${!defaultConfig.student_header_logoImage ? 'Vista previa logo' : ''}
+                  </div>
+                </div>
+              </div>
+
+              <!-- SECCIÓN 2: Crear Nuevo Post -->
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 40px; color: white;">
+              <h2 style="margin: 0 0 24px 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;">➕ CREAR UN NUEVO TEMA</h2>
+              <p style="margin: 0 0 20px 0; opacity: 0.95; font-size: 14px; line-height: 1.6;">Completa el formulario para agregar un nuevo tema al blog. Los alumnos podrán verlo inmediatamente.</p>
+              
+              <!-- Fila 1: Título y Categoría -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <div>
+                  <label style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; opacity: 0.95;">📝 TÍTULO (obligatorio)</label>
+                  <input type="text" id="new-post-title" placeholder="Ej: HTML Básico" style="width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 14px; color: #1f2937;">
+                </div>
+                <div>
+                  <label style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; opacity: 0.95;">📂 CATEGORÍA (obligatorio)</label>
+                  <select id="new-post-category" style="width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 14px; color: #1f2937;">
+                    <option value="">Selecciona una categoría</option>
+                    ${categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('')}
+                  </select>
+                </div>
+              </div>
+
+              <!-- Fila 2: Descripción y Foto -->
+              <div style="display: grid; grid-template-columns: 1fr 180px; gap: 12px; margin-bottom: 12px;">
+                <div>
+                  <label style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; opacity: 0.95;">💬 DESCRIPCIÓN (obligatorio)</label>
+                  <input type="text" id="new-post-excerpt" placeholder="Ej: Aprende los fundamentos de HTML..." style="width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 14px; color: #1f2937;">
+                </div>
+                <div>
+                  <label style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; opacity: 0.95;">🖼️ IMAGEN DEL TEMA</label>
+                  <input type="file" id="new-post-icon" accept="image/*" style="width: 100%; padding: 8px; border: none; border-radius: 6px; font-size: 13px; cursor: pointer;" onchange="previewNewImage()">
+                  <div id="new-image-preview" style="margin-top: 8px; width: 100%; height: 60px; border-radius: 6px; background: white; display: none; background-size: cover; background-position: center;"></div>
+                </div>
+              </div>
+
+              <!-- Contenido -->
+              <div style="margin-bottom: 12px;">
+                <label style="display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; opacity: 0.95;">📄 CONTENIDO DETALLADO (obligatorio)</label>
+                <textarea id="new-post-content" placeholder="Escribe aquí el contenido completo del tema. Puedes usar saltos de línea para separar párrafos..." style="width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 14px; min-height: 150px; font-family: system-ui; color: #1f2937; line-height: 1.6;"></textarea>
+              </div>
+
+              <!-- Info y Botón -->
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                <div style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 6px; flex: 1; font-size: 13px; line-height: 1.5;">
+                  <strong>💡 Consejos para un buen contenido:</strong>
+                  <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+                    <li>Usa títulos descriptivos</li>
+                    <li>Agrega ejemplos prácticos</li>
+                    <li>Sé claro y detallado</li>
+                  </ul>
+                </div>
+                <button onclick="createNewPost()" style="padding: 12px 24px; background: white; color: #059669; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 700; white-space: nowrap; height: fit-content;">✅ CREAR TEMA</button>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 3: Gestionar Posts -->
+            <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 40px;">
+              <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 700; color: #1f2937;">📚 Temas Creados (${blogPosts.length})</h2>
+              <div style="display: grid; gap: 12px;">
+                ${blogPosts.length === 0 ? '<p style="color: #6b7280; text-align: center; padding: 20px;">No hay temas creados aún</p>' : blogPosts.map(post => `
+                  <div style="display: flex; gap: 12px; align-items: flex-start; padding: 12px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                    <div style="width: 80px; height: 80px; background-size: cover; background-position: center; border-radius: 6px; flex-shrink: 0; background-image: url('${post.icon}'); border: 1px solid #e5e7eb;"></div>
+                    <div style="flex: 1;">
+                      <p style="margin: 0; font-weight: 600; color: #1f2937;">${post.title}</p>
+                      <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">${post.excerpt}</p>
+                      <p style="margin: 4px 0 0 0; font-size: 11px; color: #9ca3af;">Categoría: ${categories.find(c => c.id === post.category)?.name || 'Sin categoría'}</p>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                      <button onclick="editPostFull('${post.id}')" style="padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">✏️ Editar</button>
+                      <button onclick="deletePost('${post.id}')" style="padding: 6px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">🗑️ Eliminar</button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- SECCIÓN 4: Alumnos Registrados -->
+            <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 40px;">
+              <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 700; color: #1f2937;">👨‍🎓 Alumnos Registrados</h2>
+              <div id="students-list" style="display: grid; gap: 12px;">
+                <p style="color: #6b7280; text-align: center; padding: 20px;">Cargando alumnos...</p>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 5: Resumen de Base de Datos -->
+            <div style="background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); color: white;">
+              <h2 style="margin: 0 0 24px 0; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;">💾 RESUMEN DE BASE DE DATOS</h2>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px; text-align: center;">
+                  <p style="margin: 0 0 8px 0; font-size: 12px; opacity: 0.9;">Total de Alumnos</p>
+                  <p style="margin: 0; font-size: 32px; font-weight: 800;" id="total-students">0</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px; text-align: center;">
+                  <p style="margin: 0 0 8px 0; font-size: 12px; opacity: 0.9;">Total de Temas</p>
+                  <p style="margin: 0; font-size: 32px; font-weight: 800;" id="total-posts">0</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px; text-align: center;">
+                  <p style="margin: 0 0 8px 0; font-size: 12px; opacity: 0.9;">Archivos Subidos</p>
+                  <p style="margin: 0; font-size: 32px; font-weight: 800;" id="total-files">0</p>
+                </div>
+                <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px; text-align: center;">
+                  <p style="margin: 0 0 8px 0; font-size: 12px; opacity: 0.9;">Categorías</p>
+                  <p style="margin: 0; font-size: 32px; font-weight: 800;" id="total-categories">0</p>
+                </div>
+              </div>
+              <button onclick="exportDatabaseInfo()" style="width: 100%; padding: 12px; background: white; color: #6366f1; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 700;">📥 Exportar Información de Base de Datos</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('app').innerHTML = html;
+      loadStudentsList();
+      updateDatabaseStats();
+    }
+
+    function loadStudentsList() {
+      const students = JSON.parse(localStorage.getItem('students') || '[]');
+      const list = document.getElementById('students-list');
+      
+      if (students.length === 0) {
+        list.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 20px;">No hay alumnos registrados aún</p>';
+      } else {
+        list.innerHTML = students.map(student => `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #10b981;">
+            <div style="flex: 1;">
+              <p style="margin: 0; font-weight: 600; color: #1f2937;">${student.name} (@${student.username})</p>
+              <p style="margin: 4px 0 0 0; font-size: 12px; color: #6b7280;">${student.email} • ${student.course}</p>
+            </div>
+            <button onclick="deleteStudent('${student.id}')" style="padding: 6px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; margin-left: 8px;">🗑️ Eliminar</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function updateBlogConfig(field, value) {
+      defaultConfig[field] = value;
+      localStorage.setItem('config', JSON.stringify(defaultConfig));
+      showToast(`✅ ${field} actualizado`, 'success', '💾');
+    }
+
+    function handleLoginBackgroundUpload() {
+      const fileInput = document.getElementById('login-bg-upload');
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        showToast('❌ Por favor selecciona una imagen', 'error', '⚠️');
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        showToast('❌ El archivo debe ser una imagen (PNG, JPG, etc)', 'error', '⚠️');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        defaultConfig.loginBackgroundImage = e.target.result;
+        localStorage.setItem('config', JSON.stringify(defaultConfig));
+        showToast('✅ Imagen de fondo guardada correctamente', 'success', '🖼️');
+        showAdminPanel(); // Refrescar el panel para mostrar la preview
+      };
+      reader.onerror = () => {
+        showToast('❌ Error al leer la imagen', 'error', '⚠️');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearLoginBackground() {
+      defaultConfig.loginBackgroundImage = null;
+      localStorage.setItem('config', JSON.stringify(defaultConfig));
+      showToast('✅ Imagen de fondo eliminada', 'success', '🗑️');
+      showAdminPanel(); // Refrescar el panel
+    }
+
+    function handleAdminHeaderBackgroundUpload() {
+      const fileInput = document.getElementById('admin-header-bg-upload');
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        showToast('❌ Por favor selecciona una imagen', 'error', '⚠️');
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        showToast('❌ El archivo debe ser una imagen (PNG, JPG, etc)', 'error', '⚠️');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        defaultConfig.adminHeaderBackgroundImage = e.target.result;
+        localStorage.setItem('config', JSON.stringify(defaultConfig));
+        showToast('✅ Imagen de fondo guardada correctamente', 'success', '🖼️');
+        showAdminPanel(); // Refrescar el panel para mostrar la preview
+      };
+      reader.onerror = () => {
+        showToast('❌ Error al leer la imagen', 'error', '⚠️');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearAdminHeaderBackground() {
+      defaultConfig.adminHeaderBackgroundImage = null;
+      localStorage.setItem('config', JSON.stringify(defaultConfig));
+      showToast('✅ Imagen de fondo eliminada', 'success', '🗑️');
+      showAdminPanel(); // Refrescar el panel
+    }
+
+    function handleStudentHeaderBackgroundUpload() {
+      const fileInput = document.getElementById('student-header-bg-upload');
+      const file = fileInput.files[0];
+      if (!file) {
+        showToast('❌ Por favor selecciona una imagen', 'error', '⚠️');
+        return;
+      }
+      if (!file.type.startsWith('image/')) {
+        showToast('❌ El archivo debe ser una imagen (PNG, JPG, etc)', 'error', '⚠️');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        defaultConfig.student_header_backgroundImage = e.target.result;
+        localStorage.setItem('config', JSON.stringify(defaultConfig));
+        showToast('✅ Fondo del header alumno guardado', 'success', '🖼️');
+        showAdminPanel();
+      };
+      reader.onerror = () => showToast('❌ Error al leer la imagen', 'error', '⚠️');
+      reader.readAsDataURL(file);
+    }
+
+    function clearStudentHeaderBackground() {
+      defaultConfig.student_header_backgroundImage = null;
+      localStorage.setItem('config', JSON.stringify(defaultConfig));
+      showToast('✅ Fondo del header alumno eliminado', 'success', '🗑️');
+      showAdminPanel();
+    }
+
+    function handleStudentLogoUpload() {
+      const fileInput = document.getElementById('student-header-logo-upload');
+      const file = fileInput.files[0];
+      if (!file) {
+        showToast('❌ Por favor selecciona una imagen', 'error', '⚠️');
+        return;
+      }
+      if (!file.type.startsWith('image/')) {
+        showToast('❌ El archivo debe ser una imagen (PNG, JPG, etc)', 'error', '⚠️');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        defaultConfig.student_header_logoImage = e.target.result;
+        localStorage.setItem('config', JSON.stringify(defaultConfig));
+        showToast('✅ Logo guardado correctamente', 'success', '🖼️');
+        showAdminPanel();
+      };
+      reader.onerror = () => showToast('❌ Error al leer la imagen', 'error', '⚠️');
+      reader.readAsDataURL(file);
+    }
+
+    function clearStudentLogo() {
+      defaultConfig.student_header_logoImage = null;
+      localStorage.setItem('config', JSON.stringify(defaultConfig));
+      showToast('✅ Logo del header eliminado', 'success', '🗑️');
+      showAdminPanel();
+    }
+
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = (e) => reject(e);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function showStudentHeaderPreview() {
+      try {
+        const title = document.getElementById('edit-student-header-title')?.value || defaultConfig.student_header_title || defaultConfig.blog_title;
+        const subtitle = document.getElementById('edit-student-header-subtitle')?.value || defaultConfig.student_header_subtitle || defaultConfig.blog_subtitle;
+        const cta = document.getElementById('edit-student-header-cta')?.value || defaultConfig.student_header_cta_text || 'Comenzar';
+        const logoMaxH = Number(document.getElementById('edit-student-header-logo-maxh')?.value || defaultConfig.student_header_logoMaxHeight || 150);
+
+        // Obtener imágenes (priorizar archivo seleccionado, luego config guardada)
+        let bgSrc = defaultConfig.student_header_backgroundImage || null;
+        let logoSrc = defaultConfig.student_header_logoImage || null;
+
+        const bgInput = document.getElementById('student-header-bg-upload');
+        const logoInput = document.getElementById('student-header-logo-upload');
+
+        try {
+          if (bgInput && bgInput.files && bgInput.files[0]) {
+            bgSrc = await readFileAsDataURL(bgInput.files[0]);
+          }
+          if (logoInput && logoInput.files && logoInput.files[0]) {
+            logoSrc = await readFileAsDataURL(logoInput.files[0]);
+          }
+        } catch (err) {
+          showToast('❌ Error leyendo archivos para previsualizar', 'error', '⚠️');
+        }
+
+        // Crear modal de previsualización
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+
+        const card = document.createElement('div');
+        card.style.cssText = 'width:100%;max-width:960px;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.4);background:white;';
+
+        const headerStyle = bgSrc ? `background-image:url('${bgSrc}');background-size:cover;background-position:center;position:relative;color:white;` : 'background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);position:relative;color:white;';
+
+        card.innerHTML = `
+          <div style="${headerStyle}padding:40px 36px;">
+            ${bgSrc ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.35);"></div>` : ''}
+            <div style="position:relative;z-index:2;display:flex;align-items:center;gap:20px;">
+              <div style="flex-shrink:0;">
+                <img src="${logoSrc || 'img/LOGO.png'}" style="max-height:${logoMaxH}px;display:block;filter:drop-shadow(0 6px 20px rgba(0,0,0,0.25));">
+              </div>
+              <div style="flex:1;">
+                <h2 style="margin:0;font-size:36px;font-weight:800;">${escapeHtml(title)}</h2>
+                <p style="margin:8px 0 0 0;font-size:16px;opacity:0.9;font-weight:600;">${escapeHtml(subtitle)}</p>
+              </div>
+              <div style="margin-left:12px;">
+                <button style="padding:12px 18px;background:#10b981;color:white;border:none;border-radius:10px;font-weight:700;">${escapeHtml(cta)}</button>
+              </div>
+            </div>
+          </div>
+          <div style="padding:18px;background:#fff;text-align:right;">
+            <button id="close-preview-btn" style="padding:8px 12px;background:#ef4444;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Cerrar</button>
+          </div>
+        `;
+
+        overlay.appendChild(card);
+        document.body.appendChild(overlay);
+
+        const closeBtn = card.querySelector('#close-preview-btn');
+        if (closeBtn) closeBtn.onclick = () => overlay.remove();
+        overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+      } catch (e) {
+        console.error(e);
+        showToast(`❌ Error en la previsualización: ${e.message}`, 'error', '⚠️');
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function createNewPost() {
+      const title = document.getElementById('new-post-title').value;
+      const excerpt = document.getElementById('new-post-excerpt').value;
+      const category = document.getElementById('new-post-category').value;
+      const iconInput = document.getElementById('new-post-icon');
+      const content = document.getElementById('new-post-content').value;
+      
+      if (!title || !excerpt || !category || !iconInput.files.length || !content) {
+        showToast('❌ Por favor completa todos los campos incluyendo la imagen', 'error', '⚠️');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const newPost = {
+          id: 'post-' + Date.now().toString(),
+          title,
+          excerpt,
+          category,
+          icon: e.target.result, // Guardar imagen como base64
+          content,
+          date: new Date().toLocaleDateString('es-ES'),
+          likes: 0,
+          rating: 0,
+          comments: []
+        };
+        
+        blogPosts.push(newPost);
+        
+        // Guardar en localStorage
+        localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+        
+        // Limpiar campos
+        document.getElementById('new-post-title').value = '';
+        document.getElementById('new-post-excerpt').value = '';
+        document.getElementById('new-post-category').value = '';
+        document.getElementById('new-post-icon').value = '';
+        document.getElementById('new-image-preview').style.display = 'none';
+        document.getElementById('new-post-content').value = '';
+        
+        showToast(`✅ Tema "${title}" creado correctamente`, 'success', '📚');
+        setTimeout(() => showAdminPanel(), 1000);
+      };
+      reader.readAsDataURL(iconInput.files[0]);
+    }
+
+    function previewNewImage() {
+      const input = document.getElementById('new-post-icon');
+      const preview = document.getElementById('new-image-preview');
+      
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          preview.style.backgroundImage = `url('${e.target.result}')`;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function handleEditImageUpload() {
+      const input = document.getElementById('edit-post-icon');
+      const preview = document.getElementById('edit-image-preview');
+      
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          preview.style.backgroundImage = `url('${e.target.result}')`;
+          updatePreview();
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function editPostFull(postId) {
+      const post = blogPosts.find(p => p.id === postId);
+      if (!post) return;
+      
+      const html = `
+        <div class="page" style="background: #f3f4f6;">
+          <!-- Header -->
+          <div style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h1 style="margin: 0; font-size: 24px; font-weight: 800;">✏️ Editar Tema</h1>
+              <p style="margin: 4px 0 0 0; opacity: 0.9; font-size: 14px;">${post.title}</p>
+            </div>
+            <button onclick="showAdminPanel()" style="padding: 10px 16px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">← Atrás</button>
+          </div>
+
+          <!-- Contenido en dos columnas -->
+          <div style="max-width: 1400px; margin: 0 auto; width: 100%; padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            
+            <!-- COLUMNA 1: Formulario de Edición -->
+            <div>
+              <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 24px;">
+                <h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 8px;">📋 Información del Tema</h2>
+
+                <!-- Título -->
+                <div style="margin-bottom: 16px;">
+                  <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #1f2937; font-size: 13px;">📝 TÍTULO DEL TEMA</label>
+                  <input type="text" id="edit-post-title" value="${post.title}" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; transition: border-color 0.3s;" onchange="updatePreview()">
+                  <p style="margin: 4px 0 0 0; font-size: 11px; color: #6b7280;">Este es el nombre principal del tema</p>
+                </div>
+
+                <!-- Descripción Corta -->
+                <div style="margin-bottom: 16px;">
+                  <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #1f2937; font-size: 13px;">💬 DESCRIPCIÓN CORTA</label>
+                  <textarea id="edit-post-excerpt" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; min-height: 70px; font-family: system-ui;" onchange="updatePreview()">${post.excerpt}</textarea>
+                  <p style="margin: 4px 0 0 0; font-size: 11px; color: #6b7280;">Un resumen breve que aparece en la lista</p>
+                </div>
+
+                <!-- Categoría -->
+                <div style="margin-bottom: 16px;">
+                  <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #1f2937; font-size: 13px;">📂 CATEGORÍA</label>
+                  <select id="edit-post-category" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px;" onchange="updatePreview()">
+                    ${categories.map(cat => `<option value="${cat.id}" ${cat.id === post.category ? 'selected' : ''}>${cat.name}</option>`).join('')}
+                  </select>
+                  <p style="margin: 4px 0 0 0; font-size: 11px; color: #6b7280;">Agrupa el tema en una categoría</p>
+                </div>
+
+                <!-- Imagen -->
+                <div style="margin-bottom: 16px;">
+                  <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #1f2937; font-size: 13px;">🖼️ IMAGEN DEL TEMA</label>
+                  <input type="file" id="edit-post-icon" accept="image/*" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; cursor: pointer;" onchange="handleEditImageUpload()">
+                  <div id="edit-image-preview" style="margin-top: 10px; width: 100%; height: 120px; border-radius: 8px; background-size: cover; background-position: center; border: 2px solid #e5e7eb;"></div>
+                  <p style="margin: 8px 0 0 0; font-size: 11px; color: #6b7280;">Sube una imagen que represente el tema</p>
+                </div>
+
+                <!-- Contenido Principal -->
+                <div style="margin-bottom: 16px;">
+                  <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #1f2937; font-size: 13px;">📄 CONTENIDO PRINCIPAL</label>
+                  <textarea id="edit-post-content" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; min-height: 200px; font-family: system-ui; line-height: 1.6;" onchange="updatePreview()">${post.content}</textarea>
+                  <p style="margin: 4px 0 0 0; font-size: 11px; color: #6b7280;">La información completa y detallada del tema</p>
+                </div>
+
+                <!-- Información Adicional -->
+                <div style="background: #f0f9ff; padding: 12px; border-radius: 8px; border-left: 4px solid #3b82f6; margin-bottom: 16px;">
+                  <p style="margin: 0; font-size: 12px; color: #1e40af; line-height: 1.5;">
+                    <strong>💡 Consejo:</strong> Agrega ejemplos prácticos, definiciones claras y pasos detallados en el contenido para que los alumnos aprendan mejor.
+                  </p>
+                </div>
+
+                <!-- Botones de Guardar -->
+                <div style="display: flex; gap: 12px;">
+                  <button onclick="saveEditPost('${post.id}')" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700;">✅ GUARDAR CAMBIOS</button>
+                  <button onclick="showAdminPanel()" style="flex: 1; padding: 12px; background: #e5e7eb; color: #1f2937; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">❌ CANCELAR</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- COLUMNA 2: Vista Previa -->
+            <div>
+              <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 24px;">
+                <h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 8px;">👁️ VISTA PREVIA</h2>
+                
+                <div id="preview-container" style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 2px solid #e5e7eb;">
+                  <!-- Aquí se actualiza la vista previa -->
+                </div>
+
+                <p style="margin: 16px 0 0 0; font-size: 11px; color: #6b7280; text-align: center;">
+                  La vista previa se actualiza mientras escribes
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('app').innerHTML = html;
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const title = document.getElementById('edit-post-title').value || 'Título del tema';
+      const excerpt = document.getElementById('edit-post-excerpt').value || 'Descripción...';
+      const imagePreview = document.getElementById('edit-image-preview').style.backgroundImage;
+      const content = document.getElementById('edit-post-content').value || 'Contenido...';
+      
+      let imageHtml = '';
+      if (imagePreview) {
+        imageHtml = `<div style="width: 100%; height: 140px; background-size: cover; background-position: center; border-radius: 8px; margin-bottom: 12px;"></div>`;
+      }
+      
+      const preview = `
+        <div style="padding: 16px; background: white; border-radius: 8px; border-left: 4px solid #3b82f6;">
+          ${imageHtml}
+          <h3 style="margin: 0 0 8px 0; font-size: 18px; font-weight: 700; color: #1f2937;">${title}</h3>
+          <p style="margin: 0 0 12px 0; font-size: 13px; color: #6b7280; line-height: 1.5;">${excerpt}</p>
+          <div style="border-top: 1px solid #e5e7eb; padding-top: 12px; margin-top: 12px; font-size: 13px; color: #374151; line-height: 1.6; max-height: 200px; overflow-y: auto;">
+            ${content.split('\n').map(line => line.trim() ? '<p style="margin: 8px 0;">' + line + '</p>' : '').join('')}
+          </div>
+        </div>
+      `;
+      
+      // Aplicar la imagen de fondo si existe
+      if (imagePreview) {
+        const container = document.querySelector('#preview-container > div');
+        if (container && container.firstChild) {
+          container.firstChild.style.backgroundImage = imagePreview;
+        }
+      }
+      
+      document.getElementById('preview-container').innerHTML = preview;
+      
+      if (imagePreview) {
+        const imageDiv = document.querySelector('#preview-container div[style*="background-size"]');
+        if (imageDiv) {
+          imageDiv.style.backgroundImage = imagePreview;
+        }
+      }
+    }
+
+    function saveEditPost(postId) {
+      const post = blogPosts.find(p => p.id === postId);
+      if (!post) return;
+      
+      const title = document.getElementById('edit-post-title').value;
+      const excerpt = document.getElementById('edit-post-excerpt').value;
+      const category = document.getElementById('edit-post-category').value;
+      const content = document.getElementById('edit-post-content').value;
+      const iconInput = document.getElementById('edit-post-icon');
+      
+      if (!title || !excerpt || !category || !content) {
+        showToast('❌ Por favor completa todos los campos', 'error', '⚠️');
+        return;
+      }
+      
+      // Actualizar campos normales
+      post.title = title;
+      post.excerpt = excerpt;
+      post.category = category;
+      post.content = content;
+      
+      // Si se subió una nueva imagen, procesarla
+      if (iconInput.files && iconInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          post.icon = e.target.result;
+          // Guardar en localStorage
+          localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+          showToast(`✅ Tema "${title}" actualizado`, 'success', '📝');
+          setTimeout(() => showAdminPanel(), 1000);
+        };
+        reader.readAsDataURL(iconInput.files[0]);
+      } else {
+        // Si no se subió imagen, solo guardar los cambios
+        // Guardar en localStorage
+        localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+        showToast(`✅ Tema "${title}" actualizado`, 'success', '📝');
+        setTimeout(() => showAdminPanel(), 1000);
+      }
+    }
+
+    function deletePost(postId) {
+      if (confirm('¿Estás seguro de que quieres eliminar este tema? Esta acción no se puede deshacer.')) {
+        const index = blogPosts.findIndex(p => p.id === postId);
+        if (index > -1) {
+          const postTitle = blogPosts[index].title;
+          blogPosts.splice(index, 1);
+          // Guardar en localStorage
+          localStorage.setItem('blogPosts', JSON.stringify(blogPosts));
+          showToast(`✅ Tema "${postTitle}" eliminado`, 'success', '🗑️');
+          setTimeout(() => showAdminPanel(), 500);
+        }
+      }
+    }
+
+    function deleteStudent(studentId) {
+      if (confirm('¿Estás seguro de que quieres eliminar este estudiante? Esta acción no se puede deshacer.')) {
+        const students = JSON.parse(localStorage.getItem('students') || '[]');
+        const index = students.findIndex(s => s.id === studentId);
+        if (index > -1) {
+          const studentName = students[index].name;
+          students.splice(index, 1);
+          localStorage.setItem('students', JSON.stringify(students));
+          showToast(`✅ Alumno "${studentName}" eliminado`, 'success', '🗑️');
+          loadStudentsList();
+        }
+      }
+    }
+
+    function updateDatabaseStats() {
+      const students = JSON.parse(localStorage.getItem('students') || '[]');
+      const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
+      
+      document.getElementById('total-students').textContent = students.length;
+      document.getElementById('total-posts').textContent = blogPosts.length;
+      document.getElementById('total-files').textContent = uploads.length;
+      document.getElementById('total-categories').textContent = categories.length;
+    }
+
+    function exportDatabaseInfo() {
+      const students = JSON.parse(localStorage.getItem('students') || '[]');
+      const uploads = JSON.parse(localStorage.getItem('uploads') || '[]');
+      
+      const databaseInfo = {
+        exportDate: new Date().toLocaleString('es-ES'),
+        summary: {
+          totalStudents: students.length,
+          totalPosts: blogPosts.length,
+          totalFiles: uploads.length,
+          totalCategories: categories.length
+        },
+        students: students.map(s => ({
+          nombre: s.name,
+          usuario: s.username,
+          email: s.email,
+          curso: s.course
+        })),
+        files: uploads.map(f => ({
+          nombre: f.name,
+          tipo: f.type,
+          subidoPor: f.uploadedBy,
+          email: f.uploadedByEmail,
+          fecha: f.uploadDate,
+          hora: f.uploadTime,
+          tamaño: `${(f.size / 1024).toFixed(2)} KB`
+        })),
+        posts: blogPosts.map(p => ({
+          titulo: p.title,
+          categoria: categories.find(c => c.id === p.category)?.name || 'Sin categoría',
+          resumen: p.excerpt,
+          fecha: p.date,
+          likes: p.likes
+        }))
+      };
+      
+      const dataStr = JSON.stringify(databaseInfo, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `base_datos_bloc_${new Date().getTime()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      showToast('✅ Base de datos exportada correctamente', 'success', '📥');
+    }
+
+    function editPost(postId) {
+      editPostFull(postId);
+    }
+
+    // Initialize SDKs
+    (async () => {
+      await loadData(); // Cargar datos desde JSON
+
+      if (window.dataSdk) {
+        const initResult = await window.dataSdk.init(dataHandler);
+        if (!initResult.isOk) {
+          console.error("Failed to initialize data SDK");
+        }
+      }
+
+      if (window.elementSdk) {
+        await window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities: (config) => ({})
+        });
+      }
+    })();
+  </script>
+ </body>
+</html>
